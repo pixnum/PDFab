@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PDFab - PDF Generator</title>
+  <!-- Favicon (inline SVG data URI) -->
+  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect rx='18' width='100' height='100' fill='%23007acc'/><text x='50' y='57' font-family='Arial' font-size='44' fill='white' text-anchor='middle'>M</text></svg>">
+  <style>
+    :root{
+      --bg:#f6f8fb; --panel:#fff; --muted:#6b7280; --accent:#007acc; --text:#0b1726;
+      --radius:14px; --shadow: 0 6px 18px rgba(11,23,38,0.08);
+      --toolbar-h:56px;
+    }
+    [data-theme='dark']{
+      --bg:#0b1220; --panel:#091125; --muted:#9aaac0; --accent:#58a6ff; --text:#e6f0ff; --shadow: none;
+    }
+
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:linear-gradient(180deg,var(--bg), #e9eef7 120%);color:var(--text);}
+    .app{max-width:1100px;margin:28px auto;padding:18px;}
+    .card{background:var(--panel);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+
+    header{display:flex;align-items:center;gap:14px;padding:14px 18px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:42px;height:42px;border-radius:10px;background:var(--accent);display:grid;place-items:center;color:white;font-weight:700}
+    h1{font-size:16px;margin:0}
+    .sub{font-size:12px;color:var(--muted)}
+
+    .toolbar{display:flex;flex-wrap:wrap;gap:8px;padding:10px 14px;border-top:1px solid rgba(0,0,0,0.04);align-items:center}
+    .btn{background:transparent;border:1px solid transparent;padding:8px 10px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-size:13px}
+    .btn:hover{background:rgba(0,0,0,0.04)}
+    .btn.active{background:var(--accent);color:white}
+    .select{padding:8px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);background:transparent}
+
+    .editor-wrap{display:flex;flex-direction:column;padding:18px;min-height:60vh;gap:10px}
+    #editor{min-height:56vh;padding:26px;border-radius:12px;border:1px dashed rgba(0,0,0,0.06);outline:none;background:transparent;resize:none}
+    #editor:focus{box-shadow:0 4px 22px rgba(0,122,204,0.08);border-color:rgba(0,122,204,0.18)}
+
+    footer{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-top:1px solid rgba(0,0,0,0.04)}
+    .muted{color:var(--muted);font-size:13px}
+
+    /* Responsive */
+    @media (max-width:900px){.app{margin:12px;padding:12px}.toolbar{gap:6px}.logo{width:36px;height:36px}}
+    @media (max-width:560px){header{padding:10px} .toolbar{padding:8px} .editor-wrap{padding:12px}}
+
+    /* Dark-mode toggle look */
+    .switch{width:48px;height:26px;background:rgba(255,255,255,0.06);border-radius:999px;padding:4px;display:inline-flex;align-items:center}
+    .knob{width:18px;height:18px;border-radius:50%;background:white;transform:translateX(0);transition:transform .18s}
+    [data-theme='dark'] .knob{transform:translateX(22px);background:#111827}
+
+    /* Print styles - will be used when user selects Print -> Save as PDF */
+    @media print{
+      body{background:white;color:#000}
+      header,.toolbar,footer,.controls{display:none !important}
+      .card{box-shadow:none;border-radius:0}
+      .page{padding:28mm}
+      #editor{border:none;min-height:260mm;padding:0}
+      .pdf-footer{position:fixed;bottom:8mm;left:0;right:0;text-align:center;font-size:11px;color:#222}
+      @page{size:A4; margin:20mm}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="card">
+      <header>
+        <div class="brand">
+          <div class="logo" aria-hidden>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="5" fill="white" opacity="0.12"/><path d="M6 16V8h2l3.5 5.5L15 8h2v8h-2v-4L11.5 16 8 12v4H6z" fill="white"/></svg>
+          </div>
+          <div>
+            <h1>PDF Generator</h1>
+            <div class="sub">Responsive • Dark mode • Center aligned • © Manik Roy 2025</div>
+          </div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:12px;align-items:center">
+          <div class="muted" id="hint">Hint: editor starts centre-aligned</div>
+          <div class="controls">
+            <button class="btn" id="downloadBtn" title="Export as PDF">📄 Export PDF</button>
+            <button class="btn" id="htmlBtn" title="Download HTML">⬇️ HTML</button>
+            <button class="btn" id="clearBtn" title="Clear document">🗑️ Clear</button>
+          </div>
+        </div>
+      </header>
+
+      <div class="toolbar" role="toolbar" aria-label="Formatting toolbar">
+        <button class="btn" data-cmd="bold" title="Bold"><strong>B</strong></button>
+        <button class="btn" data-cmd="italic" title="Italic"><em>I</em></button>
+        <button class="btn" data-cmd="underline" title="Underline"><u>U</u></button>
+        <div style="width:1px;height:28px;background:rgba(0,0,0,0.06);margin:0 8px"></div>
+        <button class="btn" data-cmd="justifyleft" title="Align left">⯇</button>
+        <button class="btn" data-cmd="justifycenter" title="Align center">↔</button>
+        <button class="btn" data-cmd="justifyright" title="Align right">⯈</button>
+        <button class="btn" data-cmd="justifyfull" title="Justify">≋</button>
+        <div style="width:1px;height:28px;background:rgba(0,0,0,0.06);margin:0 8px"></div>
+        <select id="fontName" class="select" title="Font family">
+          <option value="Arial">Arial</option>
+          <option value="Georgia">Georgia</option>
+          <option value="Times New Roman">Times New Roman</option>
+          <option value="Courier New">Courier New</option>
+          <option value="Inter" selected>Inter</option>
+        </select>
+        <select id="fontSize" class="select" title="Font size">
+          <option value="3">Normal</option>
+          <option value="4">Large</option>
+          <option value="2">Small</option>
+        </select>
+        <div style="flex:1"></div>
+        <label style="display:inline-flex;align-items:center;gap:10px">
+          <div class="switch" id="themeToggle" role="switch" aria-checked="false">
+            <div class="knob"></div>
+          </div>
+        </label>
+      </div>
+
+      <div class="editor-wrap page">
+        <div id="editor" contenteditable="true" spellcheck="true" aria-label="Document editor" style="text-align:center">
+          <h2 style="margin:0 0 8px 0">Your Title Here</h2>
+          <p style="margin:0 0 8px 0">Start typing... (center aligned by default)</p>
+        </div>
+        <div class="muted">Tip: Use the toolbar above to format text. "Export PDF" uses your browser's Print → Save as PDF for best fidelity.</div>
+      </div>
+
+      <footer>
+        <div class="muted"></div>
+        <div class="muted">Built for mobile, tablet & desktop</div>
+      </footer>
+
+      <!-- a footer that appears on printed PDF via CSS @media print -->
+      <div class="pdf-footer">© Manik Roy 2025 — Generated PDF</div>
+    </div>
+  </div>
+
+  <script>
+    // basic execCommand-based rich text controls (works broadly across browsers)
+    const editor = document.getElementById('editor');
+    const toolbarBtns = document.querySelectorAll('.toolbar .btn[data-cmd]');
+    toolbarBtns.forEach(btn=>btn.addEventListener('click', e=>{
+      const cmd = btn.dataset.cmd;
+      document.execCommand('styleWithCSS', false, true);
+      if(['justifyleft','justifycenter','justifyright','justifyfull'].includes(cmd)){
+        document.execCommand(cmd, false, null);
+      } else {
+        document.execCommand(cmd, false, null);
+      }
+      editor.focus();
+    }));
+
+    document.getElementById('fontName').addEventListener('change', e=>{
+      document.execCommand('fontName', false, e.target.value);
+      editor.focus();
+    });
+    document.getElementById('fontSize').addEventListener('change', e=>{
+      // fontSize values 1..7 (deprecated). We use 2/3/4 as small/normal/large
+      document.execCommand('fontSize', false, e.target.value);
+      editor.focus();
+    });
+
+    // Theme toggle
+    const html = document.documentElement;
+    const themeToggle = document.getElementById('themeToggle');
+    function setTheme(isDark){
+      if(isDark){ html.setAttribute('data-theme','dark'); themeToggle.setAttribute('aria-checked','true') }
+      else{ html.removeAttribute('data-theme'); themeToggle.setAttribute('aria-checked','false') }
+    }
+    // Initialize from prefers-color-scheme
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setTheme(prefersDark);
+    themeToggle.addEventListener('click', ()=> setTheme(!document.documentElement.hasAttribute('data-theme')));
+
+    // Export as PDF -> uses window.print() and print CSS
+    document.getElementById('downloadBtn').addEventListener('click', ()=>{
+      // briefly add aria-hidden to UI so that print output is clean (print CSS already hides)
+      // Ensure footer with copyright is visible in print
+      window.print();
+    });
+
+    // Clear button
+    document.getElementById('clearBtn').addEventListener('click', ()=>{
+      if(confirm('Clear the document? This cannot be undone.')){
+        editor.innerHTML = '';
+      }
+    });
+
+    // Download HTML file of current content
+    document.getElementById('htmlBtn').addEventListener('click', ()=>{
+      const template = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Exported Document</title></head><body>${editor.innerHTML}<footer style='margin-top:40px;font-size:12px;color:#666'>© Manik Roy 2025</footer></body></html>`;
+      const blob = new Blob([template],{type:'text/html'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'document.html'; a.click(); URL.revokeObjectURL(url);
+    });
+
+    // Accessibility: keyboard shortcuts
+    document.addEventListener('keydown', e=>{
+      if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='b'){ e.preventDefault(); document.execCommand('bold'); }
+      if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='i'){ e.preventDefault(); document.execCommand('italic'); }
+    });
+
+    // Ensure editor starts with center alignment as the user requested
+    editor.style.textAlign = 'center';
+
+    // Make sure images pasted retain size limits - gentle guard
+    editor.addEventListener('paste', (ev)=>{
+      // allow default paste but sanitize large images if any (simple approach)
+      setTimeout(()=>{
+        editor.querySelectorAll('img').forEach(img=>{ if(img.naturalWidth>1200) img.style.maxWidth='100%'; });
+      },50);
+    });
+
+    // mobile friendly: increase touch targets
+    Array.from(document.querySelectorAll('.btn, .select')).forEach(el=>el.style.touchAction='manipulation');
+
+  </script>
+</body>
+</html>
