@@ -1,162 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>PDFab — PDF Generator</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2333a6a6'/%3E%3Ctext x='50' y='58' font-size='48' font-family='Arial' fill='white' text-anchor='middle'%3EPF%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2333a6a6'/%3E%3Ctext x='50' y='58' font-size='48' font-family='Arial' fill='white' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E" />
 <style>
-/* Base & reset */
+/* --- Base & Reset --- */
 *, *::before, *::after { box-sizing:border-box; }
-body{margin:0; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#e0e0e0; color:#333; min-height:100vh; display:flex; justify-content:center; align-items:flex-start; transition:0.3s; }
-button,input,select{font-family:inherit; cursor:pointer;}
-button:focus,input:focus,select:focus{outline:none;}
-
-/* App frame */
-.app-frame{width:95%; max-width:1200px; background:#e0e0e0; border-radius:24px; padding:20px; margin:20px; box-shadow:12px 12px 24px #bebebe, -12px -12px 24px #ffffff; display:flex; flex-direction:column; gap:16px; overflow:hidden; transition:0.3s;}
+body { margin:0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-height:100vh; display:flex; justify-content:center; align-items:center; background:#e0f0f0; }
+.app-frame { max-width:1200px; width:95%; border-radius:24px; padding:20px; background:#e0f0f0; box-shadow:20px 20px 60px #bebebe, -20px -20px 60px #ffffff; display:flex; flex-direction:column; height:95vh; overflow:auto; }
 
 /* Header */
-header{display:flex; justify-content:space-between; align-items:center; padding:12px 20px; border-radius:16px; background:#e0e0e0; box-shadow:6px 6px 12px #bebebe, -6px -6px 12px #ffffff; transition:0.3s;}
-.brand{display:flex; align-items:center; gap:12px;}
-.icon{width:48px; height:48px; border-radius:12px; background:#e0e0e0; box-shadow:6px 6px 12px #bebebe, -6px -6px 12px #ffffff; display:flex; justify-content:center; align-items:center; font-weight:900; font-size:22px; color:#33a6a6; transition:0.3s;}
-.title{font-size:24px; font-weight:900; color:#333;}
-.sub{font-size:14px; color:#555; font-weight:600;}
-
-/* Dark mode */
-body.dark-mode{background:#1e1e1e; color:#eee;}
-body.dark-mode .app-frame{background:#2a2a2a; box-shadow:12px 12px 24px #1a1a1a, -12px -12px 24px #3a3a3a;}
-body.dark-mode header{background:#2a2a2a; box-shadow:6px 6px 12px #1a1a1a, -6px -6px 12px #3a3a3a;}
-body.dark-mode .icon{background:#2a2a2a; box-shadow:6px 6px 12px #1a1a1a, -6px -6px 12px #3a3a3a; color:#66cccc;}
-body.dark-mode .toolbar,.panel,.page{background:#2a2a2a; box-shadow:inset 6px 6px 12px #1a1a1a, inset -6px -6px 12px #3a3a3a;}
-body.dark-mode .editor{background:#2a2a2a; color:#eee; box-shadow:inset 4px 4px 8px #1a1a1a, inset -4px -4px 8px #3a3a3a;}
+header { display:flex; justify-content:space-between; align-items:center; padding:12px 20px; border-radius:20px; margin-bottom:20px; background:#e0f0f0; box-shadow:8px 8px 16px #bebebe, -8px -8px 16px #ffffff; }
+.brand { display:flex; align-items:center; gap:12px; }
+.icon { width:50px; height:50px; border-radius:14px; background:linear-gradient(45deg,#33a6a6,#009999); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:26px; color:white; }
+.title { font-size:24px; font-weight:900; }
+.sub { font-size:13px; color:#666; }
 
 /* Toolbar */
-.toolbar{display:flex; flex-wrap:wrap; gap:10px; padding:12px; border-radius:16px; background:#e0e0e0; box-shadow:inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff; transition:0.3s;}
-.toolbar button,.toolbar select,.toolbar input[type="color"],.toolbar input[type="number"],.toolbar input[type="file"]{background:#e0e0e0; border:none; padding:8px 12px; border-radius:12px; font-weight:700; box-shadow:4px 4px 8px #bebebe, -4px -4px 8px #ffffff; transition:all 0.2s;}
-.toolbar button:hover,.toolbar select:hover,.toolbar input:hover{box-shadow:inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;}
+.toolbar { display:flex; flex-wrap:wrap; gap:12px; padding:12px; border-radius:20px; background:#e0f0f0; box-shadow:8px 8px 16px #bebebe, -8px -8px 16px #ffffff; }
+.toolbar button, .toolbar select, .toolbar input[type="color"], .toolbar input[type="number"] { padding:10px 14px; border:none; border-radius:12px; font-weight:700; font-size:16px; cursor:pointer; background:#e0f0f0; box-shadow:8px 8px 16px #bebebe, -8px -8px 16px #ffffff; transition: all 0.2s ease-in-out; }
+.toolbar button:hover, .toolbar select:hover, .toolbar input[type="color"]:hover, .toolbar input[type="number"]:hover { background:#d0eaea; box-shadow: inset 2px 2px 5px #bebebe, inset -2px -2px 5px #ffffff; }
+.toolbar button:active, .toolbar select:active, .toolbar input[type="color"]:active, .toolbar input[type="number"]:active { transform:translateY(1px); background:#c0dddd; box-shadow: inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff; }
 
-/* Workspace */
-.workspace{display:flex; gap:16px; flex-wrap:wrap;}
-.left{flex:1 1 0; display:flex; flex-direction:column; gap:12px;}
-.canvas-wrap{flex:1; display:flex; flex-direction:column; gap:16px; overflow:auto; max-height:70vh;}
-.page{background:#e0e0e0; width:100%; max-width:840px; min-height:1180px; border-radius:24px; padding:36px; box-shadow:inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff; display:flex; flex-direction:column; transition:0.3s;}
-.editor{flex:1; background:#e0e0e0; border-radius:18px; padding:20px; font-size:18px; line-height:1.6; color:#333; outline:none; overflow:auto; text-align:center; box-shadow:inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff; transition:0.3s;}
-.editor img{max-width:100%; border-radius:16px; margin:12px auto; display:block; cursor:pointer; transition: transform 0.2s;}
-.editor img:hover{transform: scale(1.03);}
+/* Editor */
+.canvas-wrap { flex:1; display:flex; justify-content:center; margin-top:20px; }
+.page { background:#e0f0f0; width:100%; max-width:840px; border-radius:24px; padding:24px; box-shadow: inset 0 0 40px rgba(51,166,166,0.3), 8px 8px 16px #bebebe, -8px -8px 16px #ffffff; display:flex; flex-direction:column; min-height:800px; }
+.editor { flex:1; background:#e0f0f0; border-radius:16px; padding:16px; font-size:16px; color: #111; outline:none; overflow:auto; min-height:400px; text-align:left; box-shadow: inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff; }
+.editor img.inserted-image { max-width:100%; border-radius:12px; margin:12px auto; display:block; cursor:pointer; transition: transform 0.2s; }
+.editor img.inserted-image:hover { transform:scale(1.04); }
 
-/* Right panel */
-.right{width:360px; display:flex; flex-direction:column; gap:12px;}
-.panel{padding:12px; border-radius:16px; background:#e0e0e0; box-shadow:inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff; transition:0.3s;}
+/* Right Panel */
+.right { width:300px; padding:20px; border-radius:20px; background:#e0f0f0; box-shadow:8px 8px 16px #bebebe, -8px -8px 16px #ffffff; display:flex; flex-direction:column; gap:16px; }
+.panel { padding:12px; border-radius:16px; background:#e0f0f0; box-shadow: inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff; }
+
+/* Footer */
+footer { text-align:center; padding:12px; font-weight:600; color:#666; }
+
+/* Dark Mode */
+body.dark-mode { background:#121212; }
+body.dark-mode .app-frame { background:#222; box-shadow:20px 20px 60px #111, -20px -20px 60px #333; }
+body.dark-mode header, body.dark-mode .toolbar, body.dark-mode .page, body.dark-mode .editor, body.dark-mode .right, body.dark-mode .panel { background:#222; box-shadow:8px 8px 16px #111, -8px -8px 16px #333; color:#eee; }
+body.dark-mode .toolbar button:hover, body.dark-mode .panel button:hover { background:#1a7d7d; box-shadow: inset 2px 2px 5px #111, inset -2px -2px 5px #333; }
+body.dark-mode .toolbar button:active, body.dark-mode .panel button:active { background:#146666; box-shadow: inset 5px 5px 10px #111, inset -5px -5px 10px #333; }
 
 /* Responsive */
-@media(max-width:768px){.workspace{flex-direction:column;} .right{width:100%;} .canvas-wrap{max-height:50vh;}}
+@media(max-width:768px){ .app-frame{height:100vh;} .workspace{flex-direction:column;} .right{width:100%;} }
 </style>
 </head>
 <body>
 <div class="app-frame">
 <header>
-<div class="brand">
-<div class="icon">PF</div>
-<div><div class="title">PDFab</div><div class="sub"></div></div>
-</div>
-<button id="themeToggle">Toggle Theme</button>
+  <div class="brand">
+    <div class="icon">P</div>
+    <div>
+      <div class="title">PDFab</div>
+      <div class="sub"></div>
+    </div>
+  </div>
+  <button id="themeToggle" aria-pressed="false">Toggle Theme</button>
 </header>
 
-<div class="workspace">
-<section class="left">
-<div class="toolbar">
-<button data-cmd="bold"><b>B</b></button>
-<button data-cmd="italic"><i>I</i></button>
-<button data-cmd="underline"><u>U</u></button>
-<button data-cmd="justifyLeft">⟵</button>
-<button data-cmd="justifyCenter">⤒</button>
-<button data-cmd="justifyRight">⟶</button>
-<button data-cmd="justifyFull">☰</button>
-<select id="fontSelect"><option value="inherit" selected>System</option><option value="Arial, Helvetica, sans-serif">Arial</option><option value="Verdana, sans-serif">Verdana</option><option value="'Times New Roman', Times, serif">Times New Roman</option><option value="Georgia, serif">Georgia</option><option value="'Courier New', monospace">Courier New</option><option value="'Trebuchet MS', sans-serif">Trebuchet MS</option></select>
-<input type="number" id="fontSize" min="8" max="72" value="18">
-<input type="color" id="colorPicker" value="#333">
-<input type="file" id="imageInput" accept="image/*">
-<button id="clearBtn">Clear</button>
-<select id="languageSelect">
-<optgroup label="Indian Languages">
-<option>Hindi</option><option>Bengali</option><option>Telugu</option><option>Marathi</option><option>Tamil</option>
-<option>Urdu</option><option>Gujarati</option><option>Kannada</option><option>Odia</option><option>Malayalam</option>
-<option>Punjabi</option><option>Assamese</option><option>Maithili</option><option>Santali</option><option>Kashmiri</option>
-<option>Nepali</option><option>Konkani</option><option>Sindhi</option><option>Dogri</option><option>Manipuri</option>
-<option>Bodo</option><option>Sanskrit</option>
-</optgroup>
-<optgroup label="World Languages">
-<option>English</option><option>Spanish</option><option>Mandarin</option><option>French</option><option>German</option>
-<option>Russian</option><option>Japanese</option><option>Portuguese</option><option>Italian</option><option>Arabic</option>
-<option>Turkish</option><option>Korean</option><option>Dutch</option><option>Swedish</option><option>Greek</option>
-<option>Thai</option><option>Polish</option><option>Vietnamese</option><option>Hebrew</option><option>Hungarian</option>
-<option>Czech</option><option>Filipino</option><option>Malay</option>
-</optgroup>
-</select>
-</div>
+<div class="workspace" style="display:flex; gap:20px;">
+  <section class="left" style="flex:1; display:flex; flex-direction:column; gap:16px;">
+    <div class="toolbar">
+      <button data-cmd="bold"><b>B</b></button>
+      <button data-cmd="italic"><i>I</i></button>
+      <button data-cmd="underline"><u>U</u></button>
+      <select id="fontSelect">
+        <option value="Arial" selected>Arial</option>
+        <option value="Georgia">Georgia</option>
+        <option value="'Times New Roman'">Times New Roman</option>
+        <option value="Verdana">Verdana</option>
+        <option value="'Courier New'">Courier New</option>
+        <option value="Tahoma">Tahoma</option>
+        <option value="Impact">Impact</option>
+        <option value="'Lucida Console'">Lucida Console</option>
+        <option value="'Palatino Linotype'">Palatino</option>
+        <option value="'Comic Sans MS'">Comic Sans MS</option>
+        <option value="'Gill Sans'">Gill Sans</option>
+        <option value="'Helvetica Neue'">Helvetica Neue</option>
+        <option value="'Segoe UI'">Segoe UI</option>
+        <option value="'Open Sans'">Open Sans</option>
+        <option value="'Roboto'">Roboto</option>
+        <option value="'Lato'">Lato</option>
+        <option value="'Montserrat'">Montserrat</option>
+        <option value="'Raleway'">Raleway</option>
+        <option value="'Oswald'">Oswald</option>
+        <option value="'PT Sans'">PT Sans</option>
+        <option value="'Merriweather'">Merriweather</option>
+        <option value="'Nunito'">Nunito</option>
+        <option value="'Ubuntu'">Ubuntu</option>
+        <option value="'Poppins'">Poppins</option>
+        <option value="'Fira Sans'">Fira Sans</option>
+        <option value="'Source Sans Pro'">Source Sans Pro</option>
+        <option value="'Dosis'">Dosis</option>
+        <option value="'Cabin'">Cabin</option>
+        <option value="'Quicksand'">Quicksand</option>
+        <option value="'Playfair Display'">Playfair Display</option>
+        <option value="'Comfortaa'">Comfortaa</option>
+        <option value="'Karla'">Karla</option>
+        <option value="'Varela Round'">Varela Round</option>
+        <option value="'Mukta'">Mukta</option>
+        <option value="'Rubik'">Rubik</option>
+      </select>
+      <input type="number" id="fontSize" value="16" min="8" max="72" />
+      <input type="color" id="colorPicker" />
+      <button data-cmd="justifyLeft">⟵</button>
+      <button data-cmd="justifyCenter">⤒</button>
+      <button data-cmd="justifyRight">⟶</button>
+      <button data-cmd="justifyFull">☰</button>
+      <input type="file" id="imgUpload" accept="image/*" style="display:none"/>
+      <button id="imgBtn">📷 Insert Image</button>
+      <button id="clearBtn">Clear</button>
+    </div>
 
-<div class="canvas-wrap" id="canvasWrap">
-<div class="page"><div class="editor" contenteditable="true" spellcheck="true"><h1>Your title here</h1><p>Start typing...</p></div></div>
-</div>
+    <div class="canvas-wrap">
+      <div class="page">
+        <div id="editor" class="editor" contenteditable="true" spellcheck="true">
+          <p>Start typing...</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<button id="addPageBtn">+ Add Page</button>
-</section>
-
-<aside class="right">
-<div class="panel">
-<h4>Page Settings</h4>
-<label for="pageSize">Size</label>
-<select id="pageSize"><option value="A4" selected>A4</option><option value="Letter">Letter</option></select>
-<label for="orientation">Orientation</label>
-<select id="orientation"><option value="portrait" selected>Portrait</option><option value="landscape">Landscape</option></select>
-<label for="margins">Margins (px)</label>
-<input id="margins" type="number" min="0" max="120" value="28">
+  <aside class="right">
+    <div class="panel">
+      <label for="languageSelect">Language</label>
+      <select id="languageSelect">
+        <option value="en" selected>English</option>
+        <option value="hi">Hindi</option>
+        <option value="bn">Bengali</option>
+        <option value="te">Telugu</option>
+        <option value="mr">Marathi</option>
+        <option value="ta">Tamil</option>
+        <option value="ur">Urdu</option>
+        <option value="gu">Gujarati</option>
+        <option value="kn">Kannada</option>
+        <option value="ml">Malayalam</option>
+        <option value="or">Odia</option>
+        <option value="pa">Punjabi</option>
+        <option value="as">Assamese</option>
+        <option value="ma">Maithili</option>
+        <option value="sa">Sanskrit</option>
+        <option value="sd">Sindhi</option>
+        <option value="ks">Kashmiri</option>
+        <option value="ne">Nepali</option>
+        <option value="bodo">Bodo</option>
+        <option value="si">Sinhala</option>
+        <option value="dz">Dzongkha</option>
+        <option value="en-uk">UK English</option>
+        <option value="zh">Chinese</option>
+        <option value="es">Spanish</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+        <option value="ru">Russian</option>
+        <option value="ja">Japanese</option>
+        <option value="ko">Korean</option>
+        <option value="ar">Arabic</option>
+        <option value="pt">Portuguese</option>
+        <option value="it">Italian</option>
+        <option value="tr">Turkish</option>
+        <option value="vi">Vietnamese</option>
+        <option value="id">Indonesian</option>
+        <option value="th">Thai</option>
+      </select>
+    </div>
+    <div class="panel">
+      <button id="downloadBtn">Export PDF</button>
+    </div>
+  </aside>
 </div>
-<div class="panel">
-<h4>Document Info</h4>
-<input id="docTitle" type="text" placeholder="Document title" value="PDFab">
-<input id="docAuthor" type="text" placeholder="Author" value="PDFab">
-<button id="downloadBtn">Export PDF</button>
-</div>
-</aside>
-</div>
-</div>
+<footer>Built with ❤️ • © PDFab 2025</footer>
 
 <iframe id="print-frame" style="display:none;width:100%;height:100%;"></iframe>
+</div>
 
 <script>
-// Editor commands
-const editor=document.querySelector('.editor');
-document.execCommand('justifyCenter',false,null);
+const editor = document.getElementById('editor');
+const toolbar = document.querySelector('.toolbar');
+const colorPicker = document.getElementById('colorPicker');
+const fontSelect = document.getElementById('fontSelect');
+const fontSize = document.getElementById('fontSize');
+const downloadBtn = document.getElementById('downloadBtn');
+const imgUpload = document.getElementById('imgUpload');
+const imgBtn = document.getElementById('imgBtn');
+const clearBtn = document.getElementById('clearBtn');
+const themeToggle = document.getElementById('themeToggle');
 
-document.querySelectorAll('.toolbar button[data-cmd]').forEach(btn=>{btn.addEventListener('click',()=>{document.execCommand('styleWithCSS',false,true); document.execCommand(btn.dataset.cmd,false,null); editor.focus();});});
-function applyStyle(prop,value){const sel=window.getSelection(); if(!sel.rangeCount){editor.style[prop]=value; return;} const range=sel.getRangeAt(0); if(range.collapsed){editor.style[prop]=value; return;} const content=range.extractContents(); const span=document.createElement('span'); span.style[prop]=value; span.style.display='inline'; span.appendChild(content); range.insertNode(span); sel.removeAllRanges(); const r=document.createRange(); r.setStartAfter(span); r.collapse(true); sel.addRange(r);}
-document.getElementById('fontSelect').addEventListener('change',()=>{applyStyle('fontFamily',document.getElementById('fontSelect').value); editor.focus();});
-document.getElementById('fontSize').addEventListener('input',()=>{applyStyle('fontSize',document.getElementById('fontSize').value+'px'); editor.focus();});
-document.getElementById('colorPicker').addEventListener('input',()=>{applyStyle('color',document.getElementById('colorPicker').value); editor.focus();});
-document.getElementById('clearBtn').addEventListener('click',()=>{editor.innerHTML='<div style="text-align:center;">'+editor.innerText.replace(/\n/g,'<br>')+'</div>';});
+editor.style.fontSize='16px';
+editor.style.color='inherit';
+editor.focus();
+document.execCommand('justifyLeft', false, null);
 
-// Dark mode
-document.getElementById('themeToggle').addEventListener('click',()=>{document.body.classList.toggle('dark-mode');});
+/* Toolbar buttons */
+toolbar.addEventListener('click', e => {
+  const btn = e.target.closest('button[data-cmd]');
+  if(!btn) return;
+  const cmd = btn.dataset.cmd;
+  document.execCommand('styleWithCSS', false, true);
+  document.execCommand(cmd,false,null);
+  editor.focus();
+});
 
-// Image insertion
-const imageInput=document.getElementById('imageInput');
-imageInput.addEventListener('change',e=>{Array.from(e.target.files).forEach(file=>{const reader=new FileReader();reader.onload=function(ev){const img=document.createElement('img');img.src=ev.target.result; editor.appendChild(img);};reader.readAsDataURL(file);});});
+/* Font family */
+fontSelect.addEventListener('change',()=>{document.execCommand('fontName',false,fontSelect.value);editor.focus();});
+fontSize.addEventListener('input',()=>{document.execCommand('fontSize',false,'7');var spans=editor.querySelectorAll('font[size="7"]');spans.forEach(f=>{f.removeAttribute('size');f.style.fontSize=fontSize.value+'px';});editor.focus();});
+colorPicker.addEventListener('input',()=>{document.execCommand('foreColor',false,colorPicker.value);editor.focus();});
 
-editor.addEventListener('dragover',e=>{e.preventDefault(); e.dataTransfer.dropEffect='copy';});
-editor.addEventListener('drop',e=>{e.preventDefault(); Array.from(e.dataTransfer.files).forEach(file=>{if(file.type.startsWith('image/')){const reader=new FileReader();reader.onload=function(ev){const img=document.createElement('img');img.src=ev.target.result; editor.appendChild(img);};reader.readAsDataURL(file);}});});
+/* Clear formatting */
+clearBtn.addEventListener('click',()=>{editor.innerHTML='<p>Start typing...</p>';editor.style.textAlign='left';editor.style.fontSize='16px';editor.style.color='inherit';});
 
-// Multi-page
-const canvasWrap=document.getElementById('canvasWrap');
-document.getElementById('addPageBtn').addEventListener('click',()=>{const newPage=document.createElement('div'); newPage.className='page'; const newEditor=document.createElement('div'); newEditor.className='editor'; newEditor.contentEditable=true; newEditor.innerHTML='<p>New page...</p>'; newPage.appendChild(newEditor); canvasWrap.appendChild(newPage);});
+/* Image upload */
+imgBtn.addEventListener('click',()=>imgUpload.click());
+imgUpload.addEventListener('change',e=>{
+  const file=e.target.files[0];
+  if(file && file.type.startsWith('image/')){
+    const reader=new FileReader();
+    reader.onload=()=>{const img=document.createElement('img');img.src=reader.result;img.className='inserted-image';editor.appendChild(img);};
+    reader.readAsDataURL(file);
+  }
+  e.target.value='';
+});
 
-// PDF export
-document.getElementById('downloadBtn').addEventListener('click',()=>{
-  const pages=document.querySelectorAll('.page .editor');
-  let htmlContent='';
-  pages.forEach(pg=>{htmlContent+=`<div style="page-break-after:always;">${pg.innerHTML}</div>`;});
-  const html=`<html><head><title>${document.getElementById('docTitle').value}</title><style>@page{size:${document.getElementById('pageSize').value} ${document.getElementById('orientation').value}; margin:${document.getElementById('margins').value}px;} body{font-family:Arial,sans-serif;font-size:18px;color:#111;padding:${document.getElementById('margins').value}px;margin:0; -webkit-print-color-adjust:exact; print-color-adjust:exact;} img{max-width:100%;height:auto;page-break-inside:avoid;display:block;margin:12px auto;}</style></head><body>${htmlContent}</body></html>`;
-  const iframe=document.getElementById('print-frame'); iframe.srcdoc=html; iframe.onload=()=>{iframe.contentWindow.focus(); iframe.contentWindow.print();};
+/* Dark mode */
+themeToggle.addEventListener('click',()=>{
+  document.body.classList.toggle('dark-mode');
+  themeToggle.setAttribute('aria-pressed',document.body.classList.contains('dark-mode'));
+});
+
+/* Export PDF */
+downloadBtn.addEventListener('click',()=>{
+  const htmlContent=`<html><head><title>PDFab</title><style>
+  body{font-family:${fontSelect.value}; font-size:${fontSize.value}px; color:${colorPicker.value}; padding:20px;} 
+  img{max-width:100%; height:auto; page-break-inside:avoid; display:block; margin:12px auto;}
+  </style></head><body>${editor.innerHTML}</body></html>`;
+  const printFrame=document.getElementById('print-frame');
+  printFrame.srcdoc=htmlContent;
+  printFrame.onload=()=>{printFrame.contentWindow.focus();printFrame.contentWindow.print();};
 });
 </script>
 </body>
