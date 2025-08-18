@@ -4,224 +4,332 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <title>PDFab — © PDFab 2025</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23336699'/%3E%3Ctext x='50' y='58' font-size='48' font-family='Arial' fill='white' text-anchor='middle'%3EPD%3C/text%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%2333a6a6'/%3E%3Ctext x='50' y='58' font-size='48' font-family='Arial' fill='white' text-anchor='middle'%3EPA%3C/text%3E%3C/svg%3E" />
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#e0e5ec; color:#111; display:flex; flex-direction:column; min-height:100vh; }
-  .app-frame { margin:20px auto; max-width:1200px; border-radius:20px; padding:16px; background:#e0e5ec; box-shadow: 8px 8px 16px #babecc, -8px -8px 16px #ffffff; display:flex; flex-direction:column; min-height:90vh; }
-  header { display:flex; justify-content:space-between; align-items:center; padding:12px 20px; border-radius:16px; background:#e0e5ec; box-shadow: inset 6px 6px 12px #babecc, inset -6px -6px 12px #ffffff; }
-  .brand { display:flex; align-items:center; gap:12px; }
-  .icon { width:50px; height:50px; border-radius:12px; background:#336699; display:flex; align-items:center; justify-content:center; color:white; font-weight:900; font-size:24px; user-select:none; }
-  .title { font-size:24px; font-weight:900; }
-  .sub { font-size:13px; color:#555; }
-  button#themeToggle { padding:10px 18px; border-radius:20px; border:none; background:#336699; color:white; font-weight:700; cursor:pointer; box-shadow: 4px 4px 8px #babecc, -4px -4px 8px #ffffff; transition:0.3s; }
-  button#themeToggle:hover { background:#224466; }
+/* Base reset */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #e0e5ec;
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+}
 
-  .workspace { display:flex; flex:1; gap:16px; margin-top:16px; overflow:auto; }
-  .left { flex:1; display:flex; flex-direction:column; gap:12px; }
-  .toolbar { display:flex; flex-wrap:wrap; gap:8px; padding:10px; border-radius:16px; background:#e0e5ec; box-shadow: 6px 6px 12px #babecc, -6px -6px 12px #ffffff; }
-  .toolbar button, .toolbar select, .toolbar input { border:none; border-radius:12px; padding:8px 12px; cursor:pointer; box-shadow: 4px 4px 8px #babecc, -4px -4px 8px #ffffff; }
-  .canvas-wrap { flex:1; overflow:auto; padding:8px; }
-  .page { background:#e0e5ec; border-radius:20px; padding:24px; min-height:800px; box-shadow: inset 6px 6px 12px #babecc, inset -6px -6px 12px #ffffff; display:flex; flex-direction:column; }
-  .editor { flex:1; background:#e0e5ec; border-radius:16px; padding:16px; outline:none; overflow:auto; box-shadow: inset 4px 4px 8px #babecc, inset -4px -4px 8px #ffffff; caret-color:#336699; text-align:center; }
-  .editor img.inserted-image { max-width:100%; margin:12px auto; border-radius:12px; cursor:pointer; }
-  .page-footer { margin-top:16px; font-size:14px; text-align:center; color:#555; }
+/* App frame */
+.app-frame {
+  width: 100%;
+  max-width: 1200px;
+  background: #e0e5ec;
+  border-radius: 30px;
+  padding: 20px;
+  box-shadow: 15px 15px 30px #babecc, -15px -15px 30px #ffffff;
+  display: flex;
+  flex-direction: column;
+}
 
-  .right { width:320px; background:#e0e5ec; border-radius:20px; padding:16px; box-shadow: 6px 6px 12px #babecc, -6px -6px 12px #ffffff; display:flex; flex-direction:column; gap:16px; }
-  .panel { background:#e0e5ec; border-radius:16px; padding:12px; box-shadow: inset 4px 4px 8px #babecc, inset -4px -4px 8px #ffffff; display:flex; flex-direction:column; gap:8px; }
-  .panel input, .panel select, .panel button { padding:8px; border-radius:12px; border:none; box-shadow: 4px 4px 8px #babecc, -4px -4px 8px #ffffff; }
-  .panel button { background:#336699; color:white; font-weight:700; cursor:pointer; transition:0.3s; }
-  .panel button:hover { background:#224466; }
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  background: #e0e5ec;
+  box-shadow: inset 6px 6px 12px #babecc, inset -6px -6px 12px #ffffff;
+}
 
-  footer { text-align:center; margin-top:12px; font-weight:600; color:#555; }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.icon {
+  width: 54px;
+  height: 54px;
+  background: #e0e5ec;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 24px;
+  color: #33a6a6;
+  box-shadow: 6px 6px 12px #babecc, -6px -6px 12px #ffffff;
+}
+.title { font-size: 28px; font-weight: 900; }
+.sub { font-size: 14px; color: #666; }
 
-  body.dark-mode { background:#1a1a1a; color:#e0e0e0; }
-  body.dark-mode .app-frame, body.dark-mode .toolbar, body.dark-mode .page, body.dark-mode .right, body.dark-mode .panel, body.dark-mode .editor { background:#222; color:#a0eaea; box-shadow:none; }
-  body.dark-mode .page-footer { color:#88d8d8; }
-  body.dark-mode button#themeToggle, body.dark-mode .panel button { background:#007777; }
+/* Theme Toggle Button */
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 15px;
+  padding: 12px 18px;
+  font-weight: 700;
+  background: #e0e5ec;
+  color: #333;
+  box-shadow: 6px 6px 12px #babecc, -6px -6px 12px #ffffff;
+  transition: 0.3s;
+}
+button:hover { box-shadow: inset 6px 6px 12px #babecc, inset -6px -6px 12px #ffffff; }
+body.dark-mode button {
+  background: #222;
+  color: #a0eaea;
+  box-shadow: 6px 6px 12px #111, -6px -6px 12px #333;
+}
 
-  @media (max-width:900px) {
-    .workspace { flex-direction:column; }
-    .left, .right { width:100%; }
-    .canvas-wrap { max-height:60vh; overflow:auto; }
-    .toolbar { justify-content:flex-start; }
-    header { flex-direction:column; align-items:flex-start; }
-  }
+/* Workspace */
+.workspace {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Left panel */
+.left {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 20px;
+  background: #e0e5ec;
+  box-shadow: inset 6px 6px 12px #babecc, inset -6px -6px 12px #ffffff;
+}
+.toolbar button, .toolbar select, .toolbar input[type="color"], .toolbar input[type="number"] {
+  background: #e0e5ec;
+  box-shadow: 6px 6px 12px #babecc, -6px -6px 12px #ffffff;
+  color: #333;
+  font-weight: 700;
+  padding: 10px 14px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.toolbar button:hover, .toolbar select:hover, .toolbar input:hover {
+  box-shadow: inset 6px 6px 12px #babecc, inset -6px -6px 12px #ffffff;
+}
+
+/* Editor */
+.canvas-wrap { flex: 1 1 auto; }
+.page {
+  background: #e0e5ec;
+  border-radius: 30px;
+  padding: 36px;
+  box-shadow: inset 6px 6px 12px #babecc, inset -6px -6px 12px #ffffff;
+}
+.editor {
+  min-height: 400px;
+  outline: none;
+  background: #e0e5ec;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: inset 6px 6px 12px #babecc, inset -6px -6px 12px #ffffff;
+  font-size: 18px;
+  color: #333;
+}
+
+/* Right panel */
+.right {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.panel {
+  background: #e0e5ec;
+  padding: 16px;
+  border-radius: 20px;
+  box-shadow: inset 6px 6px 12px #babecc, inset -6px -6px 12px #ffffff;
+}
+.panel h4 { margin-bottom: 12px; }
+.panel input, .panel select, .panel button {
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* Footer */
+footer { text-align:center; margin-top:20px; font-weight:600; color:#666; }
+
+/* Dark Mode */
+body.dark-mode { background: #222; color: #a0eaea; }
+body.dark-mode .app-frame { background: #222; box-shadow: 15px 15px 30px #111, -15px -15px 30px #333; }
+body.dark-mode header, body.dark-mode .toolbar, body.dark-mode .page, body.dark-mode .panel, body.dark-mode .editor { background: #222; box-shadow: inset 6px 6px 12px #111, inset -6px -6px 12px #333; }
+
+/* Responsive */
+@media (max-width: 768px) { .workspace { flex-direction: column; } .right { width: 100%; } }
 </style>
 </head>
 <body>
-<div class="app-frame">
-<header>
-  <div class="brand">
-    <div class="icon">PD</div>
-    <div>
-      <div class="title">PDFab</div>
-      <div class="sub">© PDFab 2025</div>
-    </div>
-  </div>
-  <button id="themeToggle" aria-pressed="false" title="Toggle Dark/Light theme">Toggle Theme</button>
-</header>
-
-<div class="workspace">
-  <section class="left">
-    <div class="toolbar">
-      <button data-cmd="bold"><b>B</b></button>
-      <button data-cmd="italic"><i>I</i></button>
-      <button data-cmd="underline"><u>U</u></button>
-      <button data-cmd="justifyLeft">⟵</button>
-      <button data-cmd="justifyCenter">⤒</button>
-      <button data-cmd="justifyRight">⟶</button>
-      <button data-cmd="justifyFull">☰</button>
-      <select id="fontSelect">
-        <option value="inherit">System</option>
-        <option value="Georgia, serif">Georgia</option>
-        <option value="'Times New Roman', Times, serif">Times New Roman</option>
-        <option value="Arial, Helvetica, sans-serif" selected>Arial</option>
-        <option value="Verdana, sans-serif">Verdana</option>
-        <option value="'Courier New', monospace">Courier New</option>
-      </select>
-      <input type="number" id="fontSize" min="8" max="72" value="18" />
-      <input type="color" id="colorPicker" value="#336699" />
-      <button id="imgBtn">📷 Insert Image</button>
-      <input type="file" id="imgUpload" accept="image/*" style="display:none" />
-      <button id="clearBtn">Clear</button>
-    </div>
-    <div class="canvas-wrap">
-      <article class="page">
-        <div id="editor" class="editor" contenteditable="true" spellcheck="true">
-          <h1 style="margin-top:0;">Your title here</h1>
-          <p>Start typing... default alignment is center. Insert images by clicking Insert Image or dragging one into this area.</p>
+  <div class="app-frame">
+    <header>
+      <div class="brand">
+        <div class="icon">PA</div>
+        <div>
+          <div class="title">PDFab</div>
+          <div class="sub">© PDFab 2025</div>
         </div>
-        <footer class="page-footer">
-          <div>A4 • Portrait</div>
-        </footer>
-      </article>
+      </div>
+      <div class="header-controls">
+        <button id="themeToggle">Toggle Theme</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <section class="left">
+        <div class="toolbar">
+          <button data-cmd="bold"><b>B</b></button>
+          <button data-cmd="italic"><i>I</i></button>
+          <button data-cmd="underline"><u>U</u></button>
+          <select id="fontSelect">
+            <option value="inherit">System</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="'Times New Roman', Times, serif">Times New Roman</option>
+            <option value="Arial, Helvetica, sans-serif" selected>Arial</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="'Courier New', monospace">Courier New</option>
+          </select>
+          <input type="number" id="fontSize" value="18" min="8" max="72"/>
+          <input type="color" id="colorPicker" value="#333"/>
+          <button data-cmd="justifyLeft">⟵</button>
+          <button data-cmd="justifyCenter">⤒</button>
+          <button data-cmd="justifyRight">⟶</button>
+          <button data-cmd="justifyFull">☰</button>
+          <input type="file" id="imgUpload" accept="image/*" style="display:none" />
+          <button id="imgBtn">📷 Insert Image</button>
+          <button id="clearBtn">Clear</button>
+        </div>
+        <div class="canvas-wrap">
+          <div class="page">
+            <div id="editor" class="editor" contenteditable="true" spellcheck="true">
+              <h1 style="margin-top:0;">Your title here</h1>
+              <p>Start typing... Insert images by clicking Insert Image or dragging one into this area.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="right">
+        <div class="panel">
+          <h4>Page Settings</h4>
+          <label>Size</label>
+          <select id="pageSize"><option value="A4">A4</option><option value="Letter">Letter</option></select>
+          <label>Orientation</label>
+          <select id="orientation"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select>
+          <label>Margins (px)</label>
+          <input type="number" id="margins" value="28"/>
+        </div>
+        <div class="panel">
+          <h4>Document Info</h4>
+          <input id="docTitle" type="text" value="PDFab — © PDFab 2025"/>
+          <input id="docAuthor" type="text" value="PDFab"/>
+          <button id="downloadBtn">Export PDF</button>
+        </div>
+      </aside>
     </div>
-  </section>
 
-  <aside class="right">
-    <section class="panel">
-      <label for="pageSize">Page Size</label>
-      <select id="pageSize">
-        <option value="A4" selected>A4</option>
-        <option value="Letter">Letter</option>
-      </select>
-      <label for="orientation">Orientation</label>
-      <select id="orientation">
-        <option value="portrait" selected>Portrait</option>
-        <option value="landscape">Landscape</option>
-      </select>
-      <label for="margins">Margins (px)</label>
-      <input id="margins" type="number" min="0" max="120" value="28" />
-    </section>
-
-    <section class="panel">
-      <input id="docTitle" type="text" placeholder="Document title" value="PDFab Document" />
-      <input id="docAuthor" type="text" placeholder="Author" value="PDFab" />
-      <button id="downloadBtn">Export PDF</button>
-      <button id="previewBtn" style="background:#228b22;">Preview</button>
-    </section>
-  </aside>
-</div>
-
-<footer>Built with ❤️</footer>
-<iframe id="print-frame" style="display:none; width:100%; height:100%;"></iframe>
-</div>
+    <footer>Built with ❤️ • © PDFab 2025</footer>
+    <iframe id="print-frame" style="display:none;"></iframe>
+  </div>
 
 <script>
-const editor=document.getElementById('editor');
-const toolbar=document.querySelector('.toolbar');
-const colorPicker=document.getElementById('colorPicker');
-const fontSelect=document.getElementById('fontSelect');
-const fontSize=document.getElementById('fontSize');
-const downloadBtn=document.getElementById('downloadBtn');
-const pageSizeSelect=document.getElementById('pageSize');
-const orientationSelect=document.getElementById('orientation');
-const marginsInput=document.getElementById('margins');
-const docTitleInput=document.getElementById('docTitle');
-const docAuthorInput=document.getElementById('docAuthor');
-const imgUpload=document.getElementById('imgUpload');
-const imgBtn=document.getElementById('imgBtn');
-const clearBtn=document.getElementById('clearBtn');
-const themeToggle=document.getElementById('themeToggle');
+const editor = document.getElementById('editor');
+const toolbar = document.querySelector('.toolbar');
+const colorPicker = document.getElementById('colorPicker');
+const fontSelect = document.getElementById('fontSelect');
+const fontSize = document.getElementById('fontSize');
+const downloadBtn = document.getElementById('downloadBtn');
+const pageSizeSelect = document.getElementById('pageSize');
+const orientationSelect = document.getElementById('orientation');
+const marginsInput = document.getElementById('margins');
+const docTitleInput = document.getElementById('docTitle');
+const docAuthorInput = document.getElementById('docAuthor');
+const imgUpload = document.getElementById('imgUpload');
+const imgBtn = document.getElementById('imgBtn');
+const clearBtn = document.getElementById('clearBtn');
+const themeToggle = document.getElementById('themeToggle');
 
-document.execCommand('justifyCenter', false, null);
-
-toolbar.addEventListener('click', e=>{
-  const btn=e.target.closest('button[data-cmd]');
-  if(!btn) return;
-  const cmd=btn.dataset.cmd;
+// Toolbar buttons
+toolbar.addEventListener('click', e => {
+  const btn = e.target.closest('button[data-cmd]');
+  if (!btn) return;
+  const cmd = btn.dataset.cmd;
   document.execCommand('styleWithCSS', false, true);
   document.execCommand(cmd, false, null);
   editor.focus();
 });
 
-function applyStyleToSelection(styleProp,value){
-  const sel=window.getSelection();
-  if(!sel||!sel.rangeCount){editor.style[styleProp]=value; return;}
-  const range=sel.getRangeAt(0);
-  if(range.collapsed){editor.style[styleProp]=value; return;}
-  const content=range.extractContents();
-  const wrapper=document.createElement('span');
-  wrapper.style[styleProp]=value;
-  wrapper.style.display='inline';
+function applyStyleToSelection(prop, value){
+  const sel = window.getSelection();
+  if(!sel.rangeCount){ editor.style[prop]=value; return;}
+  const range = sel.getRangeAt(0);
+  if(range.collapsed){ editor.style[prop]=value; return;}
+  const content = range.extractContents();
+  const wrapper = document.createElement('span');
+  wrapper.style[prop]=value;
   wrapper.appendChild(content);
   range.insertNode(wrapper);
   sel.removeAllRanges();
-  const newRange=document.createRange();
-  newRange.setStartAfter(wrapper);
-  newRange.collapse(true);
-  sel.addRange(newRange);
 }
 
 fontSelect.addEventListener('change', ()=>applyStyleToSelection('fontFamily', fontSelect.value==='inherit'?'':fontSelect.value));
 fontSize.addEventListener('input', ()=>applyStyleToSelection('fontSize', fontSize.value+'px'));
 colorPicker.addEventListener('input', ()=>applyStyleToSelection('color', colorPicker.value));
 
+// Clear editor
 clearBtn.addEventListener('click', ()=>{
-  editor.querySelectorAll('span').forEach(s=>{if(s.style.length>0){const p=s.parentNode; while(s.firstChild)p.insertBefore(s.firstChild,s); p.removeChild(s);}});
-  editor.querySelectorAll('*').forEach(el=>{if(el.tagName.toLowerCase()!=='img')el.removeAttribute('style');});
-  const text=editor.innerText;
-  editor.innerHTML='<div style="text-align:center;">'+text.replace(/\n/g,'<br>')+'</div>';
+  editor.innerHTML='<div style="text-align:center;">'+editor.innerText.replace(/\n/g,'<br>')+'</div>';
 });
 
+// Image insert
 imgBtn.addEventListener('click', ()=>imgUpload.click());
 imgUpload.addEventListener('change', e=>{
   const file=e.target.files[0];
-  if(file&&file.type.startsWith('image/')){
-    const reader=new FileReader();
-    reader.onload=()=>{const img=document.createElement('img'); img.src=reader.result; img.className='inserted-image'; insertImageAtCaret(img);};
+  if(file && file.type.startsWith('image/')){
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      const img=document.createElement('img');
+      img.src=reader.result;
+      img.style.width='80%';
+      img.style.display='block';
+      img.style.margin='12px auto';
+      editor.appendChild(img);
+    }
     reader.readAsDataURL(file);
   }
   e.target.value='';
 });
-function insertImageAtCaret(img){
-  const sel=window.getSelection();
-  if(!sel.rangeCount){editor.appendChild(img); return;}
-  const range=sel.getRangeAt(0);
-  range.deleteContents();
-  range.insertNode(img);
-  range.setStartAfter(img);
-  range.collapse(true);
-  sel.removeAllRanges();
-  sel.addRange(range);
-  editor.focus();
-}
 
+// Export PDF
 downloadBtn.addEventListener('click', ()=>{
-  const orientation=orientationSelect.value;
-  const margin=parseInt(marginsInput.value)||28;
-  const htmlContent=`<html><head><title>${docTitleInput.value}</title><style>@page{size:${pageSizeSelect.value} ${orientation};margin:${margin}px}body{font-family:Arial;font-size:18px;color:#111;padding:${margin}px;margin:0;background:white;-webkit-print-color-adjust:exact;print-color-adjust:exact;word-wrap:break-word;overflow-wrap:break-word}img{max-width:100%;height:auto;page-break-inside:avoid;display:block;margin:12px auto}div{word-break:break-word}footer{font-size:12px;color:#777;margin-top:40px;text-align:center}</style></head><body><div>${editor.innerHTML}</div><footer>© PDFab 2025</footer></body></html>`;
+  const htmlContent=`<html>
+  <head><title>${docTitleInput.value}</title>
+  <style>
+    @page{size:${pageSizeSelect.value} ${orientationSelect.value};margin:${marginsInput.value}px;}
+    body{font-family:Arial,sans-serif;font-size:18px;color:#111;padding:${marginsInput.value}px;margin:0;}
+    img{max-width:100%;height:auto;display:block;margin:12px auto;}
+  </style></head>
+  <body>${editor.innerHTML}</body></html>`;
   const printFrame=document.getElementById('print-frame');
-  printFrame.style.display='block';
   printFrame.srcdoc=htmlContent;
-  printFrame.onload=()=>{printFrame.contentWindow.focus(); printFrame.contentWindow.print(); printFrame.style.display='none';};
+  printFrame.onload=()=>{printFrame.contentWindow.focus();printFrame.contentWindow.print();}
 });
 
+// Theme toggle
 themeToggle.addEventListener('click', ()=>{
   document.body.classList.toggle('dark-mode');
-  const pressed=document.body.classList.contains('dark-mode');
-  themeToggle.setAttribute('aria-pressed', pressed.toString());
 });
 </script>
 </body>
