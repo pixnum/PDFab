@@ -1,44 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <title>PDFab — © PDFab 2025</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2333a6a6'/%3E%3Ctext x='50' y='60' font-size='48' font-family='Arial' fill='white' text-anchor='middle'%3EPD%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23336699'/%3E%3Ctext x='50' y='58' font-size='48' font-family='Arial' fill='white' text-anchor='middle'%3EPD%3C/text%3E%3C/svg%3E" />
 <style>
-  * { box-sizing: border-box; }
-  body { margin:0; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#e0f2f2; display:flex; justify-content:center; padding:20px; }
-  .app-frame { width:100%; max-width:1200px; border-radius:24px; padding:16px; background:#e0f2f2; box-shadow: 8px 8px 20px #b0c4c4, -8px -8px 20px #ffffff; display:flex; flex-direction:column; min-height:90vh; }
-  header { display:flex; justify-content:space-between; align-items:center; padding:12px 24px; background:#e0f2f2; border-radius:16px; box-shadow: inset 4px 4px 10px #b0c4c4, inset -4px -4px 10px #ffffff; }
-  .brand .title { font-size:24px; font-weight:900; color:#333; }
-  .brand .sub { font-size:13px; color:#555; font-weight:600; }
-  button { cursor:pointer; border:none; border-radius:12px; padding:10px 16px; font-weight:700; background:#e0f2f2; box-shadow: 4px 4px 6px #b0c4c4, -4px -4px 6px #ffffff; transition:0.2s; }
-  button:hover { box-shadow: inset 4px 4px 6px #b0c4c4, inset -4px -4px 6px #ffffff; }
-  .workspace { display:flex; flex:1 1 auto; gap:20px; margin-top:20px; }
-  .left { flex:1; display:flex; flex-direction:column; gap:16px; }
-  .toolbar { display:flex; flex-wrap:wrap; gap:12px; padding:12px; border-radius:16px; background:#e0f2f2; box-shadow: inset 4px 4px 10px #b0c4c4, inset -4px -4px 10px #ffffff; }
-  .canvas-wrap { flex:1; display:flex; justify-content:center; overflow:auto; }
-  .page { background:#e0f2f2; border-radius:24px; padding:36px 44px; width:100%; max-width:840px; min-height:1180px; box-shadow: 8px 8px 20px #b0c4c4, -8px -8px 20px #ffffff; display:flex; flex-direction:column; }
-  .editor { flex:1; background:#e0f2f2; border-radius:18px; padding:20px 28px; font-size:18px; line-height:1.6; color:#333; outline:none; overflow:auto; text-align:center; }
-  .editor img { max-width:80%; border-radius:16px; margin:16px auto; display:block; cursor:pointer; transition:transform 0.2s; }
-  .right { width:360px; background:#e0f2f2; border-radius:24px; padding:24px; box-shadow: 8px 8px 20px #b0c4c4, -8px -8px 20px #ffffff; display:flex; flex-direction:column; gap:24px; }
-  .panel { background:#e0f2f2; border-radius:20px; padding:16px 20px; box-shadow: inset 4px 4px 10px #b0c4c4, inset -4px -4px 10px #ffffff; }
-  .panel h4 { margin-top:0; margin-bottom:12px; font-weight:800; color:#333; }
-  .panel input, .panel select { width:100%; padding:10px; border-radius:12px; border:none; box-shadow: inset 4px 4px 6px #b0c4c4, inset -4px -4px 6px #ffffff; margin-top:6px; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#e0e5ec; color:#111; display:flex; flex-direction:column; min-height:100vh; }
+  .app-frame { margin:20px auto; max-width:1200px; border-radius:20px; padding:16px; background:#e0e5ec; box-shadow: 8px 8px 16px #babecc, -8px -8px 16px #ffffff; display:flex; flex-direction:column; min-height:90vh; }
+  header { display:flex; justify-content:space-between; align-items:center; padding:12px 20px; border-radius:16px; background:#e0e5ec; box-shadow: inset 6px 6px 12px #babecc, inset -6px -6px 12px #ffffff; }
+  .brand { display:flex; align-items:center; gap:12px; }
+  .icon { width:50px; height:50px; border-radius:12px; background:#336699; display:flex; align-items:center; justify-content:center; color:white; font-weight:900; font-size:24px; user-select:none; }
+  .title { font-size:24px; font-weight:900; }
+  .sub { font-size:13px; color:#555; }
+  button#themeToggle { padding:10px 18px; border-radius:20px; border:none; background:#336699; color:white; font-weight:700; cursor:pointer; box-shadow: 4px 4px 8px #babecc, -4px -4px 8px #ffffff; transition:0.3s; }
+  button#themeToggle:hover { background:#224466; }
+
+  .workspace { display:flex; flex:1; gap:16px; margin-top:16px; overflow:auto; }
+  .left { flex:1; display:flex; flex-direction:column; gap:12px; }
+  .toolbar { display:flex; flex-wrap:wrap; gap:8px; padding:10px; border-radius:16px; background:#e0e5ec; box-shadow: 6px 6px 12px #babecc, -6px -6px 12px #ffffff; }
+  .toolbar button, .toolbar select, .toolbar input { border:none; border-radius:12px; padding:8px 12px; cursor:pointer; box-shadow: 4px 4px 8px #babecc, -4px -4px 8px #ffffff; }
+  .canvas-wrap { flex:1; overflow:auto; padding:8px; }
+  .page { background:#e0e5ec; border-radius:20px; padding:24px; min-height:800px; box-shadow: inset 6px 6px 12px #babecc, inset -6px -6px 12px #ffffff; display:flex; flex-direction:column; }
+  .editor { flex:1; background:#e0e5ec; border-radius:16px; padding:16px; outline:none; overflow:auto; box-shadow: inset 4px 4px 8px #babecc, inset -4px -4px 8px #ffffff; caret-color:#336699; text-align:center; }
+  .editor img.inserted-image { max-width:100%; margin:12px auto; border-radius:12px; cursor:pointer; }
+  .page-footer { margin-top:16px; font-size:14px; text-align:center; color:#555; }
+
+  .right { width:320px; background:#e0e5ec; border-radius:20px; padding:16px; box-shadow: 6px 6px 12px #babecc, -6px -6px 12px #ffffff; display:flex; flex-direction:column; gap:16px; }
+  .panel { background:#e0e5ec; border-radius:16px; padding:12px; box-shadow: inset 4px 4px 8px #babecc, inset -4px -4px 8px #ffffff; display:flex; flex-direction:column; gap:8px; }
+  .panel input, .panel select, .panel button { padding:8px; border-radius:12px; border:none; box-shadow: 4px 4px 8px #babecc, -4px -4px 8px #ffffff; }
+  .panel button { background:#336699; color:white; font-weight:700; cursor:pointer; transition:0.3s; }
+  .panel button:hover { background:#224466; }
+
   footer { text-align:center; margin-top:12px; font-weight:600; color:#555; }
-  body.dark-mode { background:#121212; }
-  body.dark-mode .app-frame, body.dark-mode header, body.dark-mode .toolbar, body.dark-mode .page, body.dark-mode .right, body.dark-mode .panel { background:#1a1a1a; color:#a0eaea; box-shadow: inset 4px 4px 10px #111, inset -4px -4px 10px #222; }
-  body.dark-mode button { background:#1a1a1a; box-shadow:4px 4px 8px #111, -4px -4px 8px #222; color:#a0eaea; }
+
+  body.dark-mode { background:#1a1a1a; color:#e0e0e0; }
+  body.dark-mode .app-frame, body.dark-mode .toolbar, body.dark-mode .page, body.dark-mode .right, body.dark-mode .panel, body.dark-mode .editor { background:#222; color:#a0eaea; box-shadow:none; }
+  body.dark-mode .page-footer { color:#88d8d8; }
+  body.dark-mode button#themeToggle, body.dark-mode .panel button { background:#007777; }
+
+  @media (max-width:900px) {
+    .workspace { flex-direction:column; }
+    .left, .right { width:100%; }
+    .canvas-wrap { max-height:60vh; overflow:auto; }
+    .toolbar { justify-content:flex-start; }
+    header { flex-direction:column; align-items:flex-start; }
+  }
 </style>
 </head>
 <body>
 <div class="app-frame">
 <header>
   <div class="brand">
-    <div class="title">PDFab</div>
-    <div class="sub">© PDFab 2025</div>
+    <div class="icon">PD</div>
+    <div>
+      <div class="title">PDFab</div>
+      <div class="sub">© PDFab 2025</div>
+    </div>
   </div>
-  <button id="themeToggle" aria-pressed="false">Toggle Theme</button>
+  <button id="themeToggle" aria-pressed="false" title="Toggle Dark/Light theme">Toggle Theme</button>
 </header>
 
 <div class="workspace">
@@ -51,134 +72,157 @@
       <button data-cmd="justifyCenter">⤒</button>
       <button data-cmd="justifyRight">⟶</button>
       <button data-cmd="justifyFull">☰</button>
-      <input type="file" id="imgUpload" accept="image/*" style="display:none;">
+      <select id="fontSelect">
+        <option value="inherit">System</option>
+        <option value="Georgia, serif">Georgia</option>
+        <option value="'Times New Roman', Times, serif">Times New Roman</option>
+        <option value="Arial, Helvetica, sans-serif" selected>Arial</option>
+        <option value="Verdana, sans-serif">Verdana</option>
+        <option value="'Courier New', monospace">Courier New</option>
+      </select>
+      <input type="number" id="fontSize" min="8" max="72" value="18" />
+      <input type="color" id="colorPicker" value="#336699" />
       <button id="imgBtn">📷 Insert Image</button>
+      <input type="file" id="imgUpload" accept="image/*" style="display:none" />
       <button id="clearBtn">Clear</button>
     </div>
     <div class="canvas-wrap">
       <article class="page">
-        <div id="editor" class="editor" contenteditable="true">
+        <div id="editor" class="editor" contenteditable="true" spellcheck="true">
           <h1 style="margin-top:0;">Your title here</h1>
           <p>Start typing... default alignment is center. Insert images by clicking Insert Image or dragging one into this area.</p>
         </div>
+        <footer class="page-footer">
+          <div>A4 • Portrait</div>
+        </footer>
       </article>
     </div>
   </section>
 
   <aside class="right">
-    <div class="panel">
-      <h4>Document Info</h4>
-      <input id="docTitle" type="text" placeholder="Document title" value="PDFab — © PDFab 2025">
-      <input id="docAuthor" type="text" placeholder="Author" value="PDFab">
+    <section class="panel">
+      <label for="pageSize">Page Size</label>
+      <select id="pageSize">
+        <option value="A4" selected>A4</option>
+        <option value="Letter">Letter</option>
+      </select>
+      <label for="orientation">Orientation</label>
+      <select id="orientation">
+        <option value="portrait" selected>Portrait</option>
+        <option value="landscape">Landscape</option>
+      </select>
+      <label for="margins">Margins (px)</label>
+      <input id="margins" type="number" min="0" max="120" value="28" />
+    </section>
+
+    <section class="panel">
+      <input id="docTitle" type="text" placeholder="Document title" value="PDFab Document" />
+      <input id="docAuthor" type="text" placeholder="Author" value="PDFab" />
       <button id="downloadBtn">Export PDF</button>
-    </div>
+      <button id="previewBtn" style="background:#228b22;">Preview</button>
+    </section>
   </aside>
 </div>
 
-<footer>Built with ❤️ • PDFab 2025</footer>
-
-<iframe id="print-frame" style="display:none;"></iframe>
+<footer>Built with ❤️</footer>
+<iframe id="print-frame" style="display:none; width:100%; height:100%;"></iframe>
 </div>
 
 <script>
 const editor=document.getElementById('editor');
 const toolbar=document.querySelector('.toolbar');
+const colorPicker=document.getElementById('colorPicker');
+const fontSelect=document.getElementById('fontSelect');
+const fontSize=document.getElementById('fontSize');
+const downloadBtn=document.getElementById('downloadBtn');
+const pageSizeSelect=document.getElementById('pageSize');
+const orientationSelect=document.getElementById('orientation');
+const marginsInput=document.getElementById('margins');
+const docTitleInput=document.getElementById('docTitle');
+const docAuthorInput=document.getElementById('docAuthor');
 const imgUpload=document.getElementById('imgUpload');
 const imgBtn=document.getElementById('imgBtn');
 const clearBtn=document.getElementById('clearBtn');
-const downloadBtn=document.getElementById('downloadBtn');
 const themeToggle=document.getElementById('themeToggle');
 
-// Toolbar commands
+document.execCommand('justifyCenter', false, null);
+
 toolbar.addEventListener('click', e=>{
   const btn=e.target.closest('button[data-cmd]');
   if(!btn) return;
+  const cmd=btn.dataset.cmd;
   document.execCommand('styleWithCSS', false, true);
-  document.execCommand(btn.dataset.cmd, false, null);
+  document.execCommand(cmd, false, null);
   editor.focus();
 });
 
-// Clear formatting
-clearBtn.addEventListener('click', ()=>{
-  editor.querySelectorAll('*').forEach(el=>{
-    if(el.tagName.toLowerCase()!=='img') el.removeAttribute('style');
-  });
-});
-
-// Image insertion & interactive rotation
-function makeImageInteractive(img){
-  img.style.transform='rotate(0deg)'; img.dataset.rotation=0;
-  const slider=document.createElement('input');
-  slider.type='range'; slider.min=-180; slider.max=180; slider.value=0;
-  slider.style.position='absolute'; slider.style.display='none'; slider.style.width='100px'; slider.style.zIndex=1000;
-  document.body.appendChild(slider);
-  img.addEventListener('click', e=>{
-    e.stopPropagation();
-    const rect=img.getBoundingClientRect();
-    slider.style.left=rect.left+'px';
-    slider.style.top=rect.bottom+5+'px';
-    slider.style.display='block';
-    slider.value=img.dataset.rotation;
-    slider.focus();
-  });
-  slider.addEventListener('input', ()=>{
-    const angle=slider.value;
-    img.dataset.rotation=angle;
-    img.style.transform=`rotate(${angle}deg)`;
-  });
-  document.addEventListener('click', ()=>{ slider.style.display='none'; });
-}
-
-function insertImageAtCaret(src){
-  const img=document.createElement('img');
-  img.src=src; img.className='inserted-image'; img.setAttribute('contenteditable','false');
-  makeImageInteractive(img);
+function applyStyleToSelection(styleProp,value){
   const sel=window.getSelection();
-  if(!sel.rangeCount){ editor.appendChild(img); return; }
+  if(!sel||!sel.rangeCount){editor.style[styleProp]=value; return;}
   const range=sel.getRangeAt(0);
-  range.deleteContents(); range.insertNode(img);
-  range.setStartAfter(img); range.collapse(true);
-  sel.removeAllRanges(); sel.addRange(range);
-  editor.focus();
+  if(range.collapsed){editor.style[styleProp]=value; return;}
+  const content=range.extractContents();
+  const wrapper=document.createElement('span');
+  wrapper.style[styleProp]=value;
+  wrapper.style.display='inline';
+  wrapper.appendChild(content);
+  range.insertNode(wrapper);
+  sel.removeAllRanges();
+  const newRange=document.createRange();
+  newRange.setStartAfter(wrapper);
+  newRange.collapse(true);
+  sel.addRange(newRange);
 }
+
+fontSelect.addEventListener('change', ()=>applyStyleToSelection('fontFamily', fontSelect.value==='inherit'?'':fontSelect.value));
+fontSize.addEventListener('input', ()=>applyStyleToSelection('fontSize', fontSize.value+'px'));
+colorPicker.addEventListener('input', ()=>applyStyleToSelection('color', colorPicker.value));
+
+clearBtn.addEventListener('click', ()=>{
+  editor.querySelectorAll('span').forEach(s=>{if(s.style.length>0){const p=s.parentNode; while(s.firstChild)p.insertBefore(s.firstChild,s); p.removeChild(s);}});
+  editor.querySelectorAll('*').forEach(el=>{if(el.tagName.toLowerCase()!=='img')el.removeAttribute('style');});
+  const text=editor.innerText;
+  editor.innerHTML='<div style="text-align:center;">'+text.replace(/\n/g,'<br>')+'</div>';
+});
 
 imgBtn.addEventListener('click', ()=>imgUpload.click());
 imgUpload.addEventListener('change', e=>{
   const file=e.target.files[0];
-  if(file && file.type.startsWith('image/')){
+  if(file&&file.type.startsWith('image/')){
     const reader=new FileReader();
-    reader.onload=()=>insertImageAtCaret(reader.result);
+    reader.onload=()=>{const img=document.createElement('img'); img.src=reader.result; img.className='inserted-image'; insertImageAtCaret(img);};
     reader.readAsDataURL(file);
   }
   e.target.value='';
 });
+function insertImageAtCaret(img){
+  const sel=window.getSelection();
+  if(!sel.rangeCount){editor.appendChild(img); return;}
+  const range=sel.getRangeAt(0);
+  range.deleteContents();
+  range.insertNode(img);
+  range.setStartAfter(img);
+  range.collapse(true);
+  sel.removeAllRanges();
+  sel.addRange(range);
+  editor.focus();
+}
 
-// Export PDF
 downloadBtn.addEventListener('click', ()=>{
-  const htmlContent=`<html><head><title>${document.getElementById('docTitle').value}</title>
-  <style>
-    body{font-family:Arial; font-size:18px; padding:20px; color:#111; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
-    img{max-width:100%; height:auto; display:block; margin:12px auto; transform-origin:center;}
-  </style></head>
-  <body>${editor.innerHTML}</body></html>`;
+  const orientation=orientationSelect.value;
+  const margin=parseInt(marginsInput.value)||28;
+  const htmlContent=`<html><head><title>${docTitleInput.value}</title><style>@page{size:${pageSizeSelect.value} ${orientation};margin:${margin}px}body{font-family:Arial;font-size:18px;color:#111;padding:${margin}px;margin:0;background:white;-webkit-print-color-adjust:exact;print-color-adjust:exact;word-wrap:break-word;overflow-wrap:break-word}img{max-width:100%;height:auto;page-break-inside:avoid;display:block;margin:12px auto}div{word-break:break-word}footer{font-size:12px;color:#777;margin-top:40px;text-align:center}</style></head><body><div>${editor.innerHTML}</div><footer>© PDFab 2025</footer></body></html>`;
   const printFrame=document.getElementById('print-frame');
   printFrame.style.display='block';
   printFrame.srcdoc=htmlContent;
-  printFrame.onload=()=>{
-    printFrame.contentWindow.focus();
-    printFrame.contentWindow.print();
-    printFrame.style.display='none';
-  };
+  printFrame.onload=()=>{printFrame.contentWindow.focus(); printFrame.contentWindow.print(); printFrame.style.display='none';};
 });
 
-// Dark mode toggle
 themeToggle.addEventListener('click', ()=>{
   document.body.classList.toggle('dark-mode');
-  themeToggle.setAttribute('aria-pressed', document.body.classList.contains('dark-mode'));
+  const pressed=document.body.classList.contains('dark-mode');
+  themeToggle.setAttribute('aria-pressed', pressed.toString());
 });
-
-// Make existing images interactive
-editor.querySelectorAll('img').forEach(img=>makeImageInteractive(img));
 </script>
 </body>
 </html>
