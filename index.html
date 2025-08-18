@@ -1,43 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <title>PDFab — PDF Generator</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23009999'/%3E%3Ctext x='50' y='60' font-size='40' font-family='Arial' fill='white' text-anchor='middle'%3EPA%3C/text%3E%3C/svg%3E">
-
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2333a6a6'/%3E%3Ctext x='50' y='58' font-size='48' font-family='Arial' fill='white' text-anchor='middle'%3EPF%3C/text%3E%3C/svg%3E" />
 <style>
-/* Reset & base */
-*,*::before,*::after{box-sizing:border-box;}
-body{margin:0;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:#e0f0f0;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;color:#111;}
-.app-frame{width:95%;max-width:1200px;margin:20px;border-radius:20px;background:#e0f0f0;padding:20px;box-shadow:12px 12px 24px #b8c4c4,-12px -12px 24px #ffffff;display:flex;flex-direction:column;gap:20px;overflow:hidden;}
-header{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background:#e0f0f0;border-radius:15px;box-shadow:5px 5px 10px #b8c4c4,-5px -5px 10px #ffffff;}
-header .brand{display:flex;align-items:center;gap:12px;}
-header .icon{width:50px;height:50px;background:#009999;border-radius:12px;display:flex;justify-content:center;align-items:center;font-weight:900;font-size:24px;color:white;box-shadow:4px 4px 8px #007777,-4px -4px 8px #00cccc;}
-.workspace{display:flex;flex-direction:row;gap:20px;flex-wrap:wrap;}
-.left{flex:1;display:flex;flex-direction:column;gap:16px;}
-.right{width:360px;display:flex;flex-direction:column;gap:20px;}
-.page{background:#e0f0f0;border-radius:20px;padding:20px;box-shadow:inset 5px 5px 10px #b8c4c4,inset -5px -5px 10px #ffffff;min-height:800px;overflow:auto;}
-.editor{width:100%;min-height:600px;padding:12px;background:#e0f0f0;border-radius:12px;box-shadow:inset 3px 3px 6px #b8c4c4,inset -3px -3px 6px #ffffff;outline:none;line-height:1.5;color:inherit;font-size:16px;text-align:left;}
-.toolbar{display:flex;flex-wrap:wrap;gap:12px;background:#e0f0f0;padding:10px;border-radius:15px;box-shadow:5px 5px 10px #b8c4c4,-5px -5px 10px #ffffff;}
-.toolbar button, .toolbar select, .toolbar input[type="number"], .toolbar input[type="color"]{border:none;border-radius:12px;padding:8px 12px;cursor:pointer;box-shadow:3px 3px 6px #b8c4c4,-3px -3px 6px #ffffff;background:#e0f0f0;font-weight:600;}
-.panel{background:#e0f0f0;padding:12px;border-radius:15px;box-shadow:inset 5px 5px 10px #b8c4c4,inset -5px -5px 10px #ffffff;}
-button#themeToggle{padding:8px 16px;border-radius:20px;border:none;background:#e0f0f0;cursor:pointer;box-shadow:5px 5px 10px #b8c4c4,-5px -5px 10px #ffffff;font-weight:700;}
-button#themeToggle:hover{box-shadow:inset 5px 5px 10px #b8c4c4,inset -5px -5px 10px #ffffff;}
-.dark-mode{background:#1a1a1a;color:#e0e0e0;}
-.dark-mode .app-frame,.dark-mode .toolbar,.dark-mode .panel,.dark-mode .page,.dark-mode header{background:#1a1a1a;box-shadow:12px 12px 24px #141414,-12px -12px 24px #222222;}
-.dark-mode .editor{background:#222;color:#e0e0e0;box-shadow:inset 3px 3px 6px #141414,inset -3px -3px 6px #222222;}
-@media(max-width:768px){.workspace{flex-direction:column;}.right{width:100%;}}
+/* --- Reset & Base --- */
+* {box-sizing:border-box;margin:0;padding:0;}
+body{font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#e0e5ec; display:flex; justify-content:center; padding:20px; color:#111; transition: background 0.3s, color 0.3s;}
+.app-frame{max-width:1200px; width:100%; background:#e0e5ec; border-radius:20px; box-shadow: 20px 20px 60px #babecc, -20px -20px 60px #ffffff; padding:16px; display:flex; flex-direction:column; min-height:90vh;}
+header{display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding:12px 20px; border-radius:20px; background:#e0e5ec; box-shadow: inset 5px 5px 10px #babecc, inset -5px -5px 10px #ffffff;}
+.brand{display:flex; align-items:center; gap:12px;}
+.icon{width:50px; height:50px; border-radius:14px; background:#33a6a6; color:white; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:24px; box-shadow: 5px 5px 15px #1f4d4d, -5px -5px 15px #66cccc;}
+.title{font-size:24px; font-weight:900;}
+.header-controls button{padding:10px 18px; border-radius:20px; border:none; background:#33a6a6; color:white; font-weight:700; cursor:pointer; transition:0.3s;}
+.header-controls button:hover{background:#1f4d4d;}
+.workspace{display:flex; gap:20px; flex:1; flex-direction:row;}
+.left{flex:1; display:flex; flex-direction:column; gap:16px;}
+.toolbar{display:flex; flex-wrap:wrap; gap:12px; align-items:center; background:#e0e5ec; border-radius:20px; padding:12px; box-shadow: inset 5px 5px 10px #babecc, inset -5px -5px 10px #ffffff;}
+.toolbar button, .toolbar select {border:none; border-radius:12px; padding:10px 14px; font-weight:700; cursor:pointer; background:#e0e5ec; box-shadow: 5px 5px 10px #babecc, -5px -5px 10px #ffffff; transition:0.3s;}
+.toolbar button:hover, .toolbar select:hover{box-shadow: inset 5px 5px 10px #babecc, inset -5px -5px 10px #ffffff;}
+.canvas-wrap{flex:1; display:flex; justify-content:center;}
+.page{flex:1; max-width:840px; min-height:1180px; background:#e0e5ec; border-radius:24px; padding:24px; box-shadow: inset 5px 5px 15px #babecc, inset -5px -5px 15px #ffffff; display:flex; flex-direction:column;}
+.editor{flex:1; background:#e0e5ec; padding:16px; border-radius:16px; font-size:16px; line-height:1.6; outline:none; overflow-wrap:break-word; word-break:break-word; box-shadow: inset 5px 5px 10px #babecc, inset -5px -5px 10px #ffffff; caret-color:#33a6a6; text-align:left;}
+.editor img.inserted-image{max-width:100%; border-radius:16px; margin:16px auto; cursor:pointer; transition:0.2s;}
+.editor img.inserted-image:hover{transform:scale(1.04);}
+.page-footer{margin-top:20px; text-align:center; color:#555; font-weight:600;}
+.right{width:360px; background:#e0e5ec; border-radius:24px; padding:20px; box-shadow: 20px 20px 60px #babecc, -20px -20px 60px #ffffff; display:flex; flex-direction:column; gap:20px;}
+.panel{background:#e0e5ec; border-radius:20px; padding:16px; box-shadow: inset 5px 5px 15px #babecc, inset -5px -5px 15px #ffffff; color:#111;}
+.panel h4{margin-bottom:12px; font-weight:800;}
+.panel input, .panel select, .panel button{width:100%; margin-top:6px; border:none; border-radius:12px; padding:10px; font-size:16px; background:#e0e5ec; box-shadow: 5px 5px 10px #babecc, -5px -5px 10px #ffffff; cursor:pointer; transition:0.3s;}
+.panel button:hover{box-shadow: inset 5px 5px 10px #babecc, inset -5px -5px 10px #ffffff;}
+footer{margin-top:12px; text-align:center; color:#555; font-weight:600;}
+/* Responsive */
+@media(max-width:768px){.workspace{flex-direction:column;}.right{width:100%;}.page{min-height:700px; max-width:100%; padding:16px;}}
+/* Dark mode */
+body.dark-mode{background:#121212; color:#e0e0e0;}
+body.dark-mode .app-frame, body.dark-mode .toolbar, body.dark-mode .right, body.dark-mode .panel, body.dark-mode .page, body.dark-mode .editor{background:#1a1a1a; color:#a0eaea; box-shadow: inset 5px 5px 15px #0f0f0f, inset -5px -5px 15px #2a2a2a;}
+body.dark-mode .header-controls button{background:#33a6a6;}
 </style>
 </head>
 <body>
 <div class="app-frame">
 <header>
 <div class="brand">
-<div class="icon">PA</div>
+<div class="icon">P</div>
 <div class="title">PDFab</div>
 </div>
-<button id="themeToggle" aria-pressed="false">Toggle Theme</button>
+<div class="header-controls">
+<button id="themeToggle" aria-pressed="false">Toggle Dark Mode</button>
+</div>
 </header>
 
 <div class="workspace">
@@ -46,146 +59,177 @@ button#themeToggle:hover{box-shadow:inset 5px 5px 10px #b8c4c4,inset -5px -5px 1
 <button data-cmd="bold"><b>B</b></button>
 <button data-cmd="italic"><i>I</i></button>
 <button data-cmd="underline"><u>U</u></button>
-<select id="fontSelect"></select>
-<input type="number" id="fontSize" min="8" max="72" value="16">
-<input type="color" id="colorPicker">
+
+<select id="fontSelect">
+<option value="Arial" selected>Arial</option>
+<option value="Verdana">Verdana</option>
+<option value="Tahoma">Tahoma</option>
+<option value="Times New Roman">Times New Roman</option>
+<option value="Georgia">Georgia</option>
+<option value="Courier New">Courier New</option>
+<option value="Trebuchet MS">Trebuchet MS</option>
+<option value="Impact">Impact</option>
+<option value="Comic Sans MS">Comic Sans MS</option>
+<option value="Lucida Console">Lucida Console</option>
+<option value="Palatino Linotype">Palatino Linotype</option>
+<option value="Garamond">Garamond</option>
+<option value="Bookman">Bookman</option>
+<option value="Candara">Candara</option>
+<option value="Century Gothic">Century Gothic</option>
+<option value="Franklin Gothic Medium">Franklin Gothic Medium</option>
+<option value="Arial Black">Arial Black</option>
+<option value="Lucida Sans Unicode">Lucida Sans Unicode</option>
+<option value="Calibri">Calibri</option>
+<option value="Cambria">Cambria</option>
+<option value="Constantia">Constantia</option>
+<option value="Corbel">Corbel</option>
+<option value="Gill Sans">Gill Sans</option>
+<option value="Helvetica">Helvetica</option>
+<option value="Segoe UI">Segoe UI</option>
+<option value="Optima">Optima</option>
+<option value="Rockwell">Rockwell</option>
+<option value="Didot">Didot</option>
+<option value="Futura">Futura</option>
+<option value="Geneva">Geneva</option>
+<option value="Baskerville">Baskerville</option>
+<option value="Avant Garde">Avant Garde</option>
+<option value="Arial Narrow">Arial Narrow</option>
+<option value="Century Schoolbook">Century Schoolbook</option>
+<option value="Monaco">Monaco</option>
+</select>
+
+<select id="fontSize"></select>
+
+<select id="languageSelect">
+<!-- 22 Indian Languages -->
+<option value="hi">Hindi</option>
+<option value="bn">Bengali</option>
+<option value="te">Telugu</option>
+<option value="mr">Marathi</option>
+<option value="ta">Tamil</option>
+<option value="ur">Urdu</option>
+<option value="gu">Gujarati</option>
+<option value="kn">Kannada</option>
+<option value="ml">Malayalam</option>
+<option value="or">Odia</option>
+<option value="pa">Punjabi</option>
+<option value="as">Assamese</option>
+<option value="sd">Sindhi</option>
+<option value="ne">Nepali</option>
+<option value="ks">Kashmiri</option>
+<option value="sa">Sanskrit</option>
+<option value="kok">Konkani</option>
+<option value="ma">Maithili</option>
+<option value="bh">Bhojpuri</option>
+<option value="dog">Dogri</option>
+<option value="bodo">Bodo</option>
+<option value="san">Santhali</option>
+<!-- 22 World Languages -->
+<option value="en">English</option>
+<option value="es">Spanish</option>
+<option value="fr">French</option>
+<option value="de">German</option>
+<option value="zh">Chinese</option>
+<option value="ar">Arabic</option>
+<option value="ru">Russian</option>
+<option value="pt">Portuguese</option>
+<option value="ja">Japanese</option>
+<option value="it">Italian</option>
+<option value="ko">Korean</option>
+<option value="vi">Vietnamese</option>
+<option value="tr">Turkish</option>
+<option value="pl">Polish</option>
+<option value="nl">Dutch</option>
+<option value="sv">Swedish</option>
+<option value="fi">Finnish</option>
+<option value="he">Hebrew</option>
+<option value="th">Thai</option>
+<option value="id">Indonesian</option>
+<option value="ms">Malay</option>
+<option value="uk">Ukrainian</option>
+</select>
+
 <button data-cmd="justifyLeft">⟵</button>
 <button data-cmd="justifyCenter">⤒</button>
 <button data-cmd="justifyRight">⟶</button>
 <button data-cmd="justifyFull">☰</button>
+<input type="file" id="imgUpload" accept="image/*" style="display:none" />
+<button id="imgBtn">📷 Insert Image</button>
 <button id="clearBtn">Clear</button>
 </div>
 
-<div class="page">
-<div id="editor" class="editor" contenteditable="true" spellcheck="true"></div>
+<div class="canvas-wrap">
+<article class="page">
+<div id="editor" class="editor" contenteditable="true" spellcheck="true">Start typing here...</div>
+<footer class="page-footer">A4 • Portrait</footer>
+</article>
 </div>
 </section>
 
 <aside class="right">
-<div class="panel">
+<section class="panel">
 <h4>Document Info</h4>
-<input id="docTitle" type="text" placeholder="Document title" value="PDFab">
-<input id="docAuthor" type="text" placeholder="Author" value="PDFab">
+<input id="docTitle" type="text" placeholder="Document Title" value="PDFab"/>
+<input id="docAuthor" type="text" placeholder="Author" value="PDFab"/>
 <button id="downloadBtn">Export PDF</button>
-</div>
-<div class="panel">
-<h4>Language</h4>
-<select id="languageSelect"></select>
-</div>
-<div class="panel">
-<h4>Font</h4>
-<select id="fontList"></select>
-</div>
+</section>
 </aside>
 </div>
+
+<footer>© PDFab 2025</footer>
 </div>
 
 <script>
-// Languages: 22 Indian + 22 World
-const languages=[
-"Assamese","Bengali","Bodo","Dogri","Gujarati","Hindi","Kannada","Kashmiri","Konkani","Maithili","Malayalam","Manipuri","Marathi","Nepali","Odia","Punjabi","Sanskrit","Santali","Sindhi","Tamil","Telugu","Urdu",
-"English","Mandarin Chinese","Spanish","French","Arabic","Bengali","Russian","Portuguese","Indonesian","Urdu","German","Japanese","Swahili","Marathi","Hindi","Punjabi","Javanese","Italian","Vietnamese","Korean","Turkish","Persian","Thai","Gujarati"];
-const langSelect=document.getElementById('languageSelect');
-languages.forEach(l=>{const o=document.createElement('option');o.value=l;o.textContent=l;langSelect.appendChild(o);});
+// Font size dropdown
+const fontSizeSelect = document.getElementById('fontSize');
+for(let i=8;i<=72;i++){
+  const opt = document.createElement('option');
+  opt.value=i;
+  opt.text=i;
+  if(i===16) opt.selected=true;
+  fontSizeSelect.appendChild(opt);
+}
 
-// Fonts: 35 popular
-const fonts=["Arial","Verdana","Tahoma","Trebuchet MS","Impact","Georgia","Garamond","Courier New","Brush Script MT","Lucida Console","Monaco","Comic Sans MS","Palatino Linotype","Book Antiqua","Candara","Century Gothic","Futura","Optima","Rockwell","Didot","Gill Sans","Helvetica","Cambria","Constantia","Corbel","Franklin Gothic Medium","Lucida Sans","Segoe UI","Times New Roman","Roboto","Open Sans","Lato","Montserrat","Raleway","PT Sans","Merriweather"];
-const fontList=document.getElementById('fontList');
-fonts.forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=f;fontList.appendChild(o);});
-
-// Editor
+// Editor formatting
 const editor=document.getElementById('editor');
-editor.innerHTML='<div style="font-size:16px; text-align:left;">Start typing...</div>';
-const toolbar=document.querySelector('.toolbar');
-
-// Toolbar buttons
-toolbar.addEventListener('click',e=>{
-const btn=e.target.closest('button[data-cmd]');
-if(!btn)return;
-const cmd=btn.dataset.cmd;
-document.execCommand('styleWithCSS',false,true);
-document.execCommand(cmd,false,null);
-editor.focus();
+document.querySelectorAll('.toolbar button[data-cmd]').forEach(btn=>{
+  btn.addEventListener('click',()=>{document.execCommand(btn.dataset.cmd,false,null); editor.focus();});
+});
+document.getElementById('fontSelect').addEventListener('change', e=>{
+  document.execCommand('fontName', false, e.target.value); editor.focus();
+});
+fontSizeSelect.addEventListener('change', e=>{
+  document.execCommand('fontSize', false, "7"); // workaround
+  const fontElements = editor.querySelectorAll("font[size='7']");
+  fontElements.forEach(f=>f.removeAttribute('size')); f.style.fontSize=e.target.value+"px";
+});
+document.getElementById('clearBtn').addEventListener('click', ()=>{editor.innerHTML=""; editor.focus();});
+document.getElementById('themeToggle').addEventListener('click', ()=>{
+  document.body.classList.toggle('dark-mode');
+});
+// Image insert
+const imgUpload = document.getElementById('imgUpload');
+document.getElementById('imgBtn').addEventListener('click', ()=>imgUpload.click());
+imgUpload.addEventListener('change', e=>{
+  const file = e.target.files[0];
+  if(file && file.type.startsWith('image/')){
+    const reader = new FileReader();
+    reader.onload=()=>{const img=document.createElement('img'); img.src=reader.result; img.className='inserted-image'; editor.appendChild(img);}
+    reader.readAsDataURL(file);
+  }
+  e.target.value='';
 });
 
-// Font size change
-const fontSize=document.getElementById('fontSize');
-fontSize.addEventListener('input',()=>{
-const px=fontSize.value||16;
-const sel=window.getSelection();
-if(!sel.rangeCount){editor.style.fontSize=px+'px';return;}
-const range=sel.getRangeAt(0);
-if(range.collapsed){editor.style.fontSize=px+'px';return;}
-const span=document.createElement('span');
-span.style.fontSize=px+'px';
-span.appendChild(range.extractContents());
-range.insertNode(span);
-sel.removeAllRanges();
-const newRange=document.createRange();
-newRange.selectNodeContents(span);
-sel.addRange(newRange);
-editor.focus();
-});
-
-// Font family change
-const fontListSel=document.getElementById('fontList');
-fontListSel.addEventListener('change',()=>{
-const font=fontListSel.value;
-const sel=window.getSelection();
-if(!sel.rangeCount){editor.style.fontFamily=font;return;}
-const range=sel.getRangeAt(0);
-if(range.collapsed){editor.style.fontFamily=font;return;}
-const span=document.createElement('span');
-span.style.fontFamily=font;
-span.appendChild(range.extractContents());
-range.insertNode(span);
-sel.removeAllRanges();
-const newRange=document.createRange();
-newRange.selectNodeContents(span);
-sel.addRange(newRange);
-editor.focus();
-});
-
-// Text color
-const colorPicker=document.getElementById('colorPicker');
-colorPicker.addEventListener('input',()=>{
-const sel=window.getSelection();
-if(!sel.rangeCount){editor.style.color=colorPicker.value;return;}
-const range=sel.getRangeAt(0);
-if(range.collapsed){editor.style.color=colorPicker.value;return;}
-const span=document.createElement('span');
-span.style.color=colorPicker.value;
-span.appendChild(range.extractContents());
-range.insertNode(span);
-sel.removeAllRanges();
-const newRange=document.createRange();
-newRange.selectNodeContents(span);
-sel.addRange(newRange);
-editor.focus();
-});
-
-// Clear button
-document.getElementById('clearBtn').addEventListener('click',()=>{editor.innerHTML='<div style="font-size:16px; text-align:left;"></div>';});
-
-// Theme toggle
-document.getElementById('themeToggle').addEventListener('click',()=>{
-document.body.classList.toggle('dark-mode');
-const pressed=document.body.classList.contains('dark-mode');
-document.getElementById('themeToggle').setAttribute('aria-pressed',pressed.toString());
-});
-
-// Export PDF (print-based, preserving formatting)
-document.getElementById('downloadBtn').addEventListener('click',()=>{
-const htmlContent=`<html><head><title>${document.getElementById('docTitle').value}</title><style>
-body{font-family:Arial,sans-serif;font-size:16px;color:#111;margin:0;padding:20px;}
-span{font-size:inherit;font-family:inherit;color:inherit;}
-img{max-width:100%;height:auto;display:block;margin:12px auto;}
-</style></head><body>${editor.innerHTML}</body></html>`;
-const w=window.open('','_blank');
-w.document.write(htmlContent);
-w.document.close();
-w.focus();
-w.print();
+// Export PDF with dynamic title/author
+document.getElementById('downloadBtn').addEventListener('click', ()=>{
+  const title=document.getElementById('docTitle').value||'Document';
+  const author=document.getElementById('docAuthor').value||'PDFab';
+  const htmlContent=`<html><head><title>${title}</title><style>body{font-family:Arial;} h1{text-align:center;} </style></head><body><h1>${title}</h1><p><b>Author:</b> ${author}</p>${editor.innerHTML}</body></html>`;
+  const printWin = window.open('', '', 'width=900,height=650');
+  printWin.document.write(htmlContent);
+  printWin.document.close();
+  printWin.focus();
+  printWin.print();
 });
 </script>
 </body>
