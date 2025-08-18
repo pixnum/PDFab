@@ -1,335 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<title>PDFab — © PDFab 2025</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%2333a6a6'/%3E%3Ctext x='50' y='58' font-size='48' font-family='Arial' fill='white' text-anchor='middle'%3EPA%3C/text%3E%3C/svg%3E" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>PDFab — PDF Generator</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2333a6a6'/%3E%3Ctext x='50' y='58' font-size='48' font-family='Arial' fill='white' text-anchor='middle'%3EPF%3C/text%3E%3C/svg%3E" />
 <style>
 /* Base reset */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #e0e5ec;
-  color: #333;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 20px;
-}
+* { box-sizing: border-box; margin:0; padding:0; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#e0f0f0; color:#333; min-height:100vh; display:flex; justify-content:center; align-items:flex-start; padding:20px; transition: background 0.3s, color 0.3s; }
+body.dark-mode { background:#1e1e1e; color:#e0e0e0; }
 
-/* App frame */
-.app-frame {
-  width: 100%;
-  max-width: 1200px;
-  background: #e0e5ec;
-  border-radius: 30px;
-  padding: 20px;
-  box-shadow: 15px 15px 30px #babecc, -15px -15px 30px #ffffff;
-  display: flex;
-  flex-direction: column;
-}
+/* App Frame */
+.app-frame { max-width:1200px; width:100%; background:#e0f0f0; border-radius:24px; padding:20px; box-shadow: 8px 8px 16px #b0c0c0, -8px -8px 16px #ffffff; transition: background 0.3s, box-shadow 0.3s; }
+body.dark-mode .app-frame { background:#1e1e1e; box-shadow: 8px 8px 16px #121212, -8px -8px 16px #2a2a2a; }
 
 /* Header */
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-  border-radius: 20px;
-  margin-bottom: 20px;
-  background: #e0e5ec;
-  box-shadow: inset 6px 6px 12px #babecc, inset -6px -6px 12px #ffffff;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.icon {
-  width: 54px;
-  height: 54px;
-  background: #e0e5ec;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 900;
-  font-size: 24px;
-  color: #33a6a6;
-  box-shadow: 6px 6px 12px #babecc, -6px -6px 12px #ffffff;
-}
-.title { font-size: 28px; font-weight: 900; }
-.sub { font-size: 14px; color: #666; }
-
-/* Theme Toggle Button */
-button {
-  cursor: pointer;
-  border: none;
-  border-radius: 15px;
-  padding: 12px 18px;
-  font-weight: 700;
-  background: #e0e5ec;
-  color: #333;
-  box-shadow: 6px 6px 12px #babecc, -6px -6px 12px #ffffff;
-  transition: 0.3s;
-}
-button:hover { box-shadow: inset 6px 6px 12px #babecc, inset -6px -6px 12px #ffffff; }
-body.dark-mode button {
-  background: #222;
-  color: #a0eaea;
-  box-shadow: 6px 6px 12px #111, -6px -6px 12px #333;
-}
+header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+header .title { font-size:28px; font-weight:900; letter-spacing:1px; }
+header .sub { font-size:14px; color:#007777; }
+button#themeToggle { padding:10px 20px; border:none; border-radius:24px; cursor:pointer; font-weight:700; background:#e0f0f0; box-shadow: 4px 4px 8px #b0c0c0, -4px -4px 8px #ffffff; transition: background 0.3s; }
+body.dark-mode button#themeToggle { background:#1e1e1e; box-shadow: 4px 4px 8px #121212, -4px -4px 8px #2a2a2a; color:#e0e0e0; }
 
 /* Workspace */
-.workspace {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-/* Left panel */
-.left {
-  flex: 1 1 0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* Toolbar */
-.toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 20px;
-  background: #e0e5ec;
-  box-shadow: inset 6px 6px 12px #babecc, inset -6px -6px 12px #ffffff;
-}
-.toolbar button, .toolbar select, .toolbar input[type="color"], .toolbar input[type="number"] {
-  background: #e0e5ec;
-  box-shadow: 6px 6px 12px #babecc, -6px -6px 12px #ffffff;
-  color: #333;
-  font-weight: 700;
-  padding: 10px 14px;
-  border-radius: 15px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-.toolbar button:hover, .toolbar select:hover, .toolbar input:hover {
-  box-shadow: inset 6px 6px 12px #babecc, inset -6px -6px 12px #ffffff;
-}
+.workspace { display:flex; gap:20px; flex-wrap:wrap; }
+.left { flex:1; display:flex; flex-direction:column; gap:16px; }
+.toolbar { display:flex; flex-wrap:wrap; gap:10px; padding:12px; border-radius:20px; background:#e0f0f0; box-shadow: 6px 6px 12px #b0c0c0, -6px -6px 12px #ffffff; transition: background 0.3s; }
+body.dark-mode .toolbar { background:#1e1e1e; box-shadow: 6px 6px 12px #121212, -6px -6px 12px #2a2a2a; }
+.toolbar button, .toolbar select, .toolbar input { border:none; border-radius:12px; padding:10px; cursor:pointer; font-weight:700; box-shadow: 4px 4px 8px #b0c0c0, -4px -4px 8px #ffffff; background:#e0f0f0; color:#333; transition: background 0.3s, box-shadow 0.3s; }
+body.dark-mode .toolbar button, body.dark-mode .toolbar select, body.dark-mode .toolbar input { background:#1e1e1e; box-shadow: 4px 4px 8px #121212, -4px -4px 8px #2a2a2a; color:#e0e0e0; }
 
 /* Editor */
-.canvas-wrap { flex: 1 1 auto; }
-.page {
-  background: #e0e5ec;
-  border-radius: 30px;
-  padding: 36px;
-  box-shadow: inset 6px 6px 12px #babecc, inset -6px -6px 12px #ffffff;
-}
-.editor {
-  min-height: 400px;
-  outline: none;
-  background: #e0e5ec;
-  border-radius: 20px;
-  padding: 20px;
-  box-shadow: inset 6px 6px 12px #babecc, inset -6px -6px 12px #ffffff;
-  font-size: 18px;
-  color: #333;
-}
+.canvas-wrap { flex:1; display:flex; justify-content:center; }
+.page { background:#e0f0f0; width:100%; max-width:840px; min-height:1180px; border-radius:24px; padding:36px 44px; box-shadow: inset 4px 4px 12px #b0c0c0, inset -4px -4px 12px #ffffff; display:flex; flex-direction:column; transition: background 0.3s; }
+body.dark-mode .page { background:#1e1e1e; box-shadow: inset 4px 4px 12px #121212, inset -4px -4px 12px #2a2a2a; }
+.editor { flex:1; padding:20px; font-size:18px; border-radius:18px; outline:none; overflow:auto; background:#e0f0f0; box-shadow: inset 4px 4px 8px #b0c0c0, inset -4px -4px 8px #ffffff; transition: background 0.3s, box-shadow 0.3s; text-align:center; }
+body.dark-mode .editor { background:#1e1e1e; box-shadow: inset 4px 4px 8px #121212, inset -4px -4px 8px #2a2a2a; color:#e0e0e0; }
+.editor img { max-width:100%; border-radius:16px; margin:16px auto; cursor:pointer; }
 
-/* Right panel */
-.right {
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-.panel {
-  background: #e0e5ec;
-  padding: 16px;
-  border-radius: 20px;
-  box-shadow: inset 6px 6px 12px #babecc, inset -6px -6px 12px #ffffff;
-}
-.panel h4 { margin-bottom: 12px; }
-.panel input, .panel select, .panel button {
-  width: 100%;
-  margin-top: 8px;
-}
-
-/* Footer */
-footer { text-align:center; margin-top:20px; font-weight:600; color:#666; }
-
-/* Dark Mode */
-body.dark-mode { background: #222; color: #a0eaea; }
-body.dark-mode .app-frame { background: #222; box-shadow: 15px 15px 30px #111, -15px -15px 30px #333; }
-body.dark-mode header, body.dark-mode .toolbar, body.dark-mode .page, body.dark-mode .panel, body.dark-mode .editor { background: #222; box-shadow: inset 6px 6px 12px #111, inset -6px -6px 12px #333; }
+/* Right Panel */
+.right { width:360px; background:#e0f0f0; border-radius:24px; padding:20px; box-shadow: 6px 6px 12px #b0c0c0, -6px -6px 12px #ffffff; display:flex; flex-direction:column; gap:20px; transition: background 0.3s; }
+body.dark-mode .right { background:#1e1e1e; box-shadow: 6px 6px 12px #121212, -6px -6px 12px #2a2a2a; color:#e0e0e0; }
+.panel { padding:16px; border-radius:20px; background:#e0f0f0; box-shadow: inset 4px 4px 8px #b0c0c0, inset -4px -4px 8px #ffffff; }
+body.dark-mode .panel { background:#1e1e1e; box-shadow: inset 4px 4px 8px #121212, inset -4px -4px 8px #2a2a2a; color:#e0e0e0; }
+.panel h4 { margin-bottom:12px; color:#007777; }
 
 /* Responsive */
-@media (max-width: 768px) { .workspace { flex-direction: column; } .right { width: 100%; } }
+@media(max-width:768px){ .workspace{flex-direction:column;} .right{width:100%;} .page{min-height:700px; padding:24px;} }
+
 </style>
 </head>
 <body>
-  <div class="app-frame">
-    <header>
-      <div class="brand">
-        <div class="icon">PA</div>
-        <div>
-          <div class="title">PDFab</div>
-          <div class="sub">© PDFab 2025</div>
-        </div>
-      </div>
-      <div class="header-controls">
-        <button id="themeToggle">Toggle Theme</button>
-      </div>
-    </header>
+<div class="app-frame">
+  <header>
+    <div>
+      <div class="title">PDFab</div>
+      <div class="sub"></div>
+    </div>
+    <button id="themeToggle">Toggle Theme</button>
+  </header>
 
-    <div class="workspace">
-      <section class="left">
-        <div class="toolbar">
-          <button data-cmd="bold"><b>B</b></button>
-          <button data-cmd="italic"><i>I</i></button>
-          <button data-cmd="underline"><u>U</u></button>
-          <select id="fontSelect">
-            <option value="inherit">System</option>
-            <option value="Georgia, serif">Georgia</option>
-            <option value="'Times New Roman', Times, serif">Times New Roman</option>
-            <option value="Arial, Helvetica, sans-serif" selected>Arial</option>
-            <option value="Verdana, sans-serif">Verdana</option>
-            <option value="'Courier New', monospace">Courier New</option>
-          </select>
-          <input type="number" id="fontSize" value="18" min="8" max="72"/>
-          <input type="color" id="colorPicker" value="#333"/>
-          <button data-cmd="justifyLeft">⟵</button>
-          <button data-cmd="justifyCenter">⤒</button>
-          <button data-cmd="justifyRight">⟶</button>
-          <button data-cmd="justifyFull">☰</button>
-          <input type="file" id="imgUpload" accept="image/*" style="display:none" />
-          <button id="imgBtn">📷 Insert Image</button>
-          <button id="clearBtn">Clear</button>
-        </div>
-        <div class="canvas-wrap">
-          <div class="page">
-            <div id="editor" class="editor" contenteditable="true" spellcheck="true">
-              <h1 style="margin-top:0;">Your title here</h1>
-              <p>Start typing... Insert images by clicking Insert Image or dragging one into this area.</p>
-            </div>
+  <div class="workspace">
+    <section class="left">
+      <div class="toolbar">
+        <button data-cmd="bold"><b>B</b></button>
+        <button data-cmd="italic"><i>I</i></button>
+        <button data-cmd="underline"><u>U</u></button>
+
+        <select id="fontSelect">
+          <option value="inherit">System</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="'Times New Roman', Times, serif">Times New Roman</option>
+          <option value="Arial, Helvetica, sans-serif" selected>Arial</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="'Courier New', monospace">Courier New</option>
+        </select>
+
+        <input type="number" id="fontSize" min="8" max="72" value="18">
+        <input type="color" id="colorPicker" value="#333333">
+
+        <select id="languageSelect">
+          <option disabled selected>Select Language</option>
+          <optgroup label="Indian Official Languages">
+            <option value="Assamese">Assamese</option>
+            <option value="Bengali">Bengali</option>
+            <option value="Bodo">Bodo</option>
+            <option value="Dogri">Dogri</option>
+            <option value="Gujarati">Gujarati</option>
+            <option value="Hindi">Hindi</option>
+            <option value="Kannada">Kannada</option>
+            <option value="Kashmiri">Kashmiri</option>
+            <option value="Konkani">Konkani</option>
+            <option value="Maithili">Maithili</option>
+            <option value="Malayalam">Malayalam</option>
+            <option value="Manipuri">Manipuri</option>
+            <option value="Marathi">Marathi</option>
+            <option value="Nepali">Nepali</option>
+            <option value="Odia">Odia</option>
+            <option value="Punjabi">Punjabi</option>
+            <option value="Sanskrit">Sanskrit</option>
+            <option value="Santali">Santali</option>
+            <option value="Sindhi">Sindhi</option>
+            <option value="Tamil">Tamil</option>
+            <option value="Telugu">Telugu</option>
+            <option value="Urdu">Urdu</option>
+          </optgroup>
+          <optgroup label="World’s Most Popular Languages">
+            <option value="English">English</option>
+            <option value="Mandarin Chinese">Mandarin Chinese</option>
+            <option value="Spanish">Spanish</option>
+            <option value="French">French</option>
+            <option value="Arabic">Arabic</option>
+            <option value="Russian">Russian</option>
+            <option value="Portuguese">Portuguese</option>
+            <option value="Indonesian">Indonesian</option>
+            <option value="German">German</option>
+            <option value="Japanese">Japanese</option>
+            <option value="Swahili">Swahili</option>
+            <option value="Turkish">Turkish</option>
+            <option value="Korean">Korean</option>
+            <option value="Vietnamese">Vietnamese</option>
+            <option value="Italian">Italian</option>
+            <option value="Thai">Thai</option>
+            <option value="Persian">Persian</option>
+            <option value="Polish">Polish</option>
+            <option value="Dutch">Dutch</option>
+          </optgroup>
+        </select>
+
+        <button data-cmd="justifyLeft">⟵</button>
+        <button data-cmd="justifyCenter">⤒</button>
+        <button data-cmd="justifyRight">⟶</button>
+        <button data-cmd="justifyFull">☰</button>
+
+        <input type="file" id="imgUpload" accept="image/*" style="display:none;">
+        <button id="imgBtn">📷 Insert Image</button>
+        <button id="clearBtn">Clear</button>
+      </div>
+
+      <div class="canvas-wrap">
+        <div class="page">
+          <div id="editor" class="editor" contenteditable="true" spellcheck="true">
+            <h1>Your title here</h1>
+            <p>Start typing... default alignment is center. Insert images using the toolbar.</p>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <aside class="right">
-        <div class="panel">
-          <h4>Page Settings</h4>
-          <label>Size</label>
-          <select id="pageSize"><option value="A4">A4</option><option value="Letter">Letter</option></select>
-          <label>Orientation</label>
-          <select id="orientation"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select>
-          <label>Margins (px)</label>
-          <input type="number" id="margins" value="28"/>
-        </div>
-        <div class="panel">
-          <h4>Document Info</h4>
-          <input id="docTitle" type="text" value="PDFab — © PDFab 2025"/>
-          <input id="docAuthor" type="text" value="PDFab"/>
-          <button id="downloadBtn">Export PDF</button>
-        </div>
-      </aside>
-    </div>
-
-    <footer>Built with ❤️ • © PDFab 2025</footer>
-    <iframe id="print-frame" style="display:none;"></iframe>
+    <aside class="right">
+      <div class="panel">
+        <h4>Document Info</h4>
+        <input id="docTitle" type="text" placeholder="Document Title" value="PDFab Document">
+        <input id="docAuthor" type="text" placeholder="Author" value="PDFab">
+        <button id="downloadBtn">Export PDF</button>
+      </div>
+    </aside>
   </div>
+</div>
+
+<iframe id="print-frame" style="display:none;"></iframe>
 
 <script>
-const editor = document.getElementById('editor');
-const toolbar = document.querySelector('.toolbar');
-const colorPicker = document.getElementById('colorPicker');
-const fontSelect = document.getElementById('fontSelect');
-const fontSize = document.getElementById('fontSize');
-const downloadBtn = document.getElementById('downloadBtn');
-const pageSizeSelect = document.getElementById('pageSize');
-const orientationSelect = document.getElementById('orientation');
-const marginsInput = document.getElementById('margins');
-const docTitleInput = document.getElementById('docTitle');
-const docAuthorInput = document.getElementById('docAuthor');
-const imgUpload = document.getElementById('imgUpload');
-const imgBtn = document.getElementById('imgBtn');
-const clearBtn = document.getElementById('clearBtn');
-const themeToggle = document.getElementById('themeToggle');
+const editor=document.getElementById('editor');
+const toolbar=document.querySelector('.toolbar');
+const colorPicker=document.getElementById('colorPicker');
+const fontSelect=document.getElementById('fontSelect');
+const fontSize=document.getElementById('fontSize');
+const downloadBtn=document.getElementById('downloadBtn');
+const imgUpload=document.getElementById('imgUpload');
+const imgBtn=document.getElementById('imgBtn');
+const clearBtn=document.getElementById('clearBtn');
+const themeToggle=document.getElementById('themeToggle');
+const languageSelect=document.getElementById('languageSelect');
 
-// Toolbar buttons
-toolbar.addEventListener('click', e => {
-  const btn = e.target.closest('button[data-cmd]');
-  if (!btn) return;
-  const cmd = btn.dataset.cmd;
-  document.execCommand('styleWithCSS', false, true);
-  document.execCommand(cmd, false, null);
+document.execCommand('justifyCenter',false,null);
+
+/* Toolbar commands */
+toolbar.addEventListener('click',e=>{
+  const btn=e.target.closest('button[data-cmd]');
+  if(!btn) return;
+  document.execCommand('styleWithCSS',false,true);
+  document.execCommand(btn.dataset.cmd,false,null);
   editor.focus();
 });
 
-function applyStyleToSelection(prop, value){
-  const sel = window.getSelection();
-  if(!sel.rangeCount){ editor.style[prop]=value; return;}
-  const range = sel.getRangeAt(0);
-  if(range.collapsed){ editor.style[prop]=value; return;}
-  const content = range.extractContents();
-  const wrapper = document.createElement('span');
-  wrapper.style[prop]=value;
-  wrapper.appendChild(content);
-  range.insertNode(wrapper);
+/* Font and color */
+function applyStyle(styleProp,value){
+  const sel=window.getSelection();
+  if(!sel.rangeCount){editor.style[styleProp]=value;return;}
+  const range=sel.getRangeAt(0);
+  if(range.collapsed){editor.style[styleProp]=value;return;}
+  const content=range.extractContents();
+  const span=document.createElement('span');
+  span.style[styleProp]=value; span.appendChild(content);
+  range.insertNode(span);
   sel.removeAllRanges();
+  const newRange=document.createRange();
+  newRange.setStartAfter(span); newRange.collapse(true); sel.addRange(newRange);
 }
+fontSelect.addEventListener('change',()=>applyStyle('fontFamily',fontSelect.value==='inherit'?'':fontSelect.value));
+fontSize.addEventListener('input',()=>applyStyle('fontSize',fontSize.value+'px'));
+colorPicker.addEventListener('input',()=>applyStyle('color',colorPicker.value));
 
-fontSelect.addEventListener('change', ()=>applyStyleToSelection('fontFamily', fontSelect.value==='inherit'?'':fontSelect.value));
-fontSize.addEventListener('input', ()=>applyStyleToSelection('fontSize', fontSize.value+'px'));
-colorPicker.addEventListener('input', ()=>applyStyleToSelection('color', colorPicker.value));
+/* Clear */
+clearBtn.addEventListener('click',()=>{editor.innerHTML='<div style="text-align:center;">'+editor.innerText.replace(/\n/g,'<br>')+'</div>';});
 
-// Clear editor
-clearBtn.addEventListener('click', ()=>{
-  editor.innerHTML='<div style="text-align:center;">'+editor.innerText.replace(/\n/g,'<br>')+'</div>';
-});
-
-// Image insert
-imgBtn.addEventListener('click', ()=>imgUpload.click());
-imgUpload.addEventListener('change', e=>{
+/* Image insertion */
+imgBtn.addEventListener('click',()=>imgUpload.click());
+imgUpload.addEventListener('change',e=>{
   const file=e.target.files[0];
   if(file && file.type.startsWith('image/')){
-    const reader = new FileReader();
-    reader.onload = ()=>{
-      const img=document.createElement('img');
-      img.src=reader.result;
-      img.style.width='80%';
-      img.style.display='block';
-      img.style.margin='12px auto';
-      editor.appendChild(img);
-    }
+    const reader=new FileReader();
+    reader.onload=()=>{const img=document.createElement('img'); img.src=reader.result; img.className='inserted-image'; editor.appendChild(img);}
     reader.readAsDataURL(file);
   }
   e.target.value='';
 });
 
-// Export PDF
-downloadBtn.addEventListener('click', ()=>{
-  const htmlContent=`<html>
-  <head><title>${docTitleInput.value}</title>
-  <style>
-    @page{size:${pageSizeSelect.value} ${orientationSelect.value};margin:${marginsInput.value}px;}
-    body{font-family:Arial,sans-serif;font-size:18px;color:#111;padding:${marginsInput.value}px;margin:0;}
-    img{max-width:100%;height:auto;display:block;margin:12px auto;}
-  </style></head>
-  <body>${editor.innerHTML}</body></html>`;
+/* Export PDF */
+downloadBtn.addEventListener('click',()=>{
+  const htmlContent=`<html><head><title>${document.getElementById('docTitle').value}</title><style>body{font-family:Arial; padding:28px; -webkit-print-color-adjust:exact; print-color-adjust:exact;} img{max-width:100%;height:auto;display:block;margin:12px auto;} div{word-break:break-word;}</style></head><body><div>${editor.innerHTML}</div></body></html>`;
   const printFrame=document.getElementById('print-frame');
+  printFrame.style.display='block';
   printFrame.srcdoc=htmlContent;
-  printFrame.onload=()=>{printFrame.contentWindow.focus();printFrame.contentWindow.print();}
+  printFrame.onload=()=>{printFrame.contentWindow.focus(); printFrame.contentWindow.print(); printFrame.style.display='none';};
 });
 
-// Theme toggle
-themeToggle.addEventListener('click', ()=>{
-  document.body.classList.toggle('dark-mode');
+/* Theme toggle */
+themeToggle.addEventListener('click',()=>{document.body.classList.toggle('dark-mode');});
+
+/* Language selector */
+languageSelect.addEventListener('change',()=>{
+  const lang=languageSelect.value;
+  const fontMap={"Assamese":"Noto Serif Assamese, serif","Bengali":"Noto Serif Bengali, serif","Bodo":"Noto Sans, sans-serif","Dogri":"Noto Sans, sans-serif","Gujarati":"Noto Serif Gujarati, serif","Hindi":"Noto Serif Devanagari, serif","Kannada":"Noto Serif Kannada, serif","Kashmiri":"Noto Sans, sans-serif","Konkani":"Noto Sans, sans-serif","Maithili":"Noto Sans, sans-serif","Malayalam":"Noto Serif Malayalam, serif","Manipuri":"Noto Sans, sans-serif","Marathi":"Noto Serif Devanagari, serif","Nepali":"Noto Serif Devanagari, serif","Odia":"Noto Serif Oriya, serif","Punjabi":"Noto Serif Gurmukhi, serif","Sanskrit":"Noto Serif Devanagari, serif","Santali":"Noto Sans Ol Chiki, sans-serif","Sindhi":"Noto Sans, sans-serif","Tamil":"Noto Serif Tamil, serif","Telugu":"Noto Serif Telugu, serif","Urdu":"Noto Nastaliq Urdu, serif","English":"Arial, Helvetica, sans-serif","Mandarin Chinese":"Noto Serif SC, serif","Spanish":"Arial, Helvetica, sans-serif","French":"Arial, Helvetica, sans-serif","Arabic":"Amiri, serif","Russian":"Times New Roman, serif","Portuguese":"Arial, Helvetica, sans-serif","Indonesian":"Arial, Helvetica, sans-serif","German":"Arial, Helvetica, sans-serif","Japanese":"Noto Serif JP, serif","Swahili":"Arial, Helvetica, sans-serif","Turkish":"Arial, Helvetica, sans-serif","Korean":"Noto Serif KR, serif","Vietnamese":"Arial, Helvetica, sans-serif","Italian":"Arial, Helvetica, sans-serif","Thai":"Noto Serif Thai, serif","Persian":"Noto Nastaliq Urdu, serif","Polish":"Arial, Helvetica, sans-serif","Dutch":"Arial, Helvetica, sans-serif"};
+  const rtl=["Arabic","Urdu","Persian"];
+  editor.style.fontFamily=fontMap[lang]||'Arial, Helvetica, sans-serif';
+  if(rtl.includes(lang)){editor.style.direction='rtl'; editor.style.textAlign='right';}
+  else{editor.style.direction='ltr'; editor.style.textAlign='left';}
 });
 </script>
 </body>
