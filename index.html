@@ -1,223 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>PDFab — PDF Generator</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2333a6a6'/%3E%3Ctext x='50' y='58' font-size='48' font-family='Arial' fill='white' text-anchor='middle'%3EPF%3C/text%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2333a6a6'/%3E%3Ctext x='50' y='58' font-size='48' font-family='Arial' fill='white' text-anchor='middle'%3EPF%3C/text%3E%3C/svg%3E">
 <style>
-  /* Reset & base */
-  *, *::before, *::after { box-sizing: border-box; }
-  body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#e0e0e0; color:#333; min-height:100vh; display:flex; justify-content:center; align-items:flex-start; }
-  a, button { font-family: inherit; }
+/* Base & reset */
+*, *::before, *::after { box-sizing:border-box; }
+body{margin:0; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#e0e0e0; color:#333; min-height:100vh; display:flex; justify-content:center; align-items:flex-start; transition:0.3s; }
+button,input,select{font-family:inherit; cursor:pointer;}
+button:focus,input:focus,select:focus{outline:none;}
 
-  /* App Frame */
-  .app-frame { width: 95%; max-width: 1200px; background:#e0e0e0; border-radius:24px; padding:20px; margin:20px; box-shadow: 12px 12px 24px #bebebe, -12px -12px 24px #ffffff; display:flex; flex-direction:column; gap:16px; overflow:hidden; }
+/* App frame */
+.app-frame{width:95%; max-width:1200px; background:#e0e0e0; border-radius:24px; padding:20px; margin:20px; box-shadow:12px 12px 24px #bebebe, -12px -12px 24px #ffffff; display:flex; flex-direction:column; gap:16px; overflow:hidden; transition:0.3s;}
 
-  /* Header */
-  header { display:flex; justify-content:space-between; align-items:center; padding:12px 20px; border-radius:16px; background:#e0e0e0; box-shadow: 6px 6px 12px #bebebe, -6px -6px 12px #ffffff; }
-  .brand { display:flex; align-items:center; gap:12px; }
-  .icon { width:48px; height:48px; border-radius:12px; background:#e0e0e0; box-shadow: 6px 6px 12px #bebebe, -6px -6px 12px #ffffff; display:flex; justify-content:center; align-items:center; font-weight:900; font-size:22px; color:#33a6a6; }
-  .title { font-size:24px; font-weight:900; color:#333; }
-  .sub { font-size:14px; color:#555; font-weight:600; }
+/* Header */
+header{display:flex; justify-content:space-between; align-items:center; padding:12px 20px; border-radius:16px; background:#e0e0e0; box-shadow:6px 6px 12px #bebebe, -6px -6px 12px #ffffff; transition:0.3s;}
+.brand{display:flex; align-items:center; gap:12px;}
+.icon{width:48px; height:48px; border-radius:12px; background:#e0e0e0; box-shadow:6px 6px 12px #bebebe, -6px -6px 12px #ffffff; display:flex; justify-content:center; align-items:center; font-weight:900; font-size:22px; color:#33a6a6; transition:0.3s;}
+.title{font-size:24px; font-weight:900; color:#333;}
+.sub{font-size:14px; color:#555; font-weight:600;}
 
-  /* Dark mode */
-  body.dark-mode { background:#1e1e1e; color:#eee; }
-  body.dark-mode .app-frame { background:#2a2a2a; box-shadow: 12px 12px 24px #1a1a1a, -12px -12px 24px #3a3a3a; }
-  body.dark-mode header { background:#2a2a2a; box-shadow:6px 6px 12px #1a1a1a, -6px -6px 12px #3a3a3a; }
-  body.dark-mode .icon { background:#2a2a2a; box-shadow:6px 6px 12px #1a1a1a, -6px -6px 12px #3a3a3a; color:#66cccc; }
+/* Dark mode */
+body.dark-mode{background:#1e1e1e; color:#eee;}
+body.dark-mode .app-frame{background:#2a2a2a; box-shadow:12px 12px 24px #1a1a1a, -12px -12px 24px #3a3a3a;}
+body.dark-mode header{background:#2a2a2a; box-shadow:6px 6px 12px #1a1a1a, -6px -6px 12px #3a3a3a;}
+body.dark-mode .icon{background:#2a2a2a; box-shadow:6px 6px 12px #1a1a1a, -6px -6px 12px #3a3a3a; color:#66cccc;}
+body.dark-mode .toolbar,.panel,.page{background:#2a2a2a; box-shadow:inset 6px 6px 12px #1a1a1a, inset -6px -6px 12px #3a3a3a;}
+body.dark-mode .editor{background:#2a2a2a; color:#eee; box-shadow:inset 4px 4px 8px #1a1a1a, inset -4px -4px 8px #3a3a3a;}
 
-  /* Toolbar */
-  .toolbar { display:flex; flex-wrap:wrap; gap:10px; padding:12px; border-radius:16px; background:#e0e0e0; box-shadow: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff; }
-  .toolbar button, .toolbar select, .toolbar input[type="color"], .toolbar input[type="number"] { background:#e0e0e0; border:none; padding:8px 12px; border-radius:12px; font-weight:700; cursor:pointer; box-shadow: 4px 4px 8px #bebebe, -4px -4px 8px #ffffff; transition: all 0.2s; }
-  .toolbar button:hover, .toolbar select:hover, .toolbar input:hover { box-shadow: inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff; }
+/* Toolbar */
+.toolbar{display:flex; flex-wrap:wrap; gap:10px; padding:12px; border-radius:16px; background:#e0e0e0; box-shadow:inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff; transition:0.3s;}
+.toolbar button,.toolbar select,.toolbar input[type="color"],.toolbar input[type="number"],.toolbar input[type="file"]{background:#e0e0e0; border:none; padding:8px 12px; border-radius:12px; font-weight:700; box-shadow:4px 4px 8px #bebebe, -4px -4px 8px #ffffff; transition:all 0.2s;}
+.toolbar button:hover,.toolbar select:hover,.toolbar input:hover{box-shadow:inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;}
 
-  /* Workspace */
-  .workspace { display:flex; gap:16px; flex-wrap:wrap; }
-  .left { flex:1 1 0; display:flex; flex-direction:column; gap:12px; }
-  .canvas-wrap { flex:1; display:flex; justify-content:center; overflow:auto; max-height:70vh; }
-  .page { background:#e0e0e0; width:100%; max-width:840px; min-height:1180px; border-radius:24px; padding:36px; box-shadow: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff; display:flex; flex-direction:column; }
-  .editor { flex:1; background:#e0e0e0; border-radius:18px; padding:20px; font-size:18px; line-height:1.6; color:#333; outline:none; overflow:auto; text-align:center; box-shadow: inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff; }
-  .editor img { max-width:100%; border-radius:16px; margin:12px auto; display:block; cursor:pointer; transition: transform 0.2s; }
-  .editor img:hover { transform: scale(1.03); }
+/* Workspace */
+.workspace{display:flex; gap:16px; flex-wrap:wrap;}
+.left{flex:1 1 0; display:flex; flex-direction:column; gap:12px;}
+.canvas-wrap{flex:1; display:flex; flex-direction:column; gap:16px; overflow:auto; max-height:70vh;}
+.page{background:#e0e0e0; width:100%; max-width:840px; min-height:1180px; border-radius:24px; padding:36px; box-shadow:inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff; display:flex; flex-direction:column; transition:0.3s;}
+.editor{flex:1; background:#e0e0e0; border-radius:18px; padding:20px; font-size:18px; line-height:1.6; color:#333; outline:none; overflow:auto; text-align:center; box-shadow:inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff; transition:0.3s;}
+.editor img{max-width:100%; border-radius:16px; margin:12px auto; display:block; cursor:pointer; transition: transform 0.2s;}
+.editor img:hover{transform: scale(1.03);}
 
-  /* Right panel */
-  .right { width:360px; display:flex; flex-direction:column; gap:12px; }
-  .panel { padding:12px; border-radius:16px; background:#e0e0e0; box-shadow: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff; }
+/* Right panel */
+.right{width:360px; display:flex; flex-direction:column; gap:12px;}
+.panel{padding:12px; border-radius:16px; background:#e0e0e0; box-shadow:inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff; transition:0.3s;}
 
-  /* Buttons */
-  button { font-weight:700; }
-
-  /* Responsive */
-  @media(max-width:768px) { .workspace { flex-direction:column; } .right{width:100%;} .canvas-wrap{max-height:50vh;} }
+/* Responsive */
+@media(max-width:768px){.workspace{flex-direction:column;} .right{width:100%;} .canvas-wrap{max-height:50vh;}}
 </style>
 </head>
 <body>
 <div class="app-frame">
-  <header>
-    <div class="brand">
-      <div class="icon">PF</div>
-      <div>
-        <div class="title">PDFab</div>
-        <div class="sub"></div>
-      </div>
-    </div>
-    <button id="themeToggle">Toggle Theme</button>
-  </header>
+<header>
+<div class="brand">
+<div class="icon">PF</div>
+<div><div class="title">PDFab</div><div class="sub"></div></div>
+</div>
+<button id="themeToggle">Toggle Theme</button>
+</header>
 
-  <div class="workspace">
-    <section class="left">
-      <div class="toolbar">
-        <button data-cmd="bold"><b>B</b></button>
-        <button data-cmd="italic"><i>I</i></button>
-        <button data-cmd="underline"><u>U</u></button>
-        <button data-cmd="justifyLeft">⟵</button>
-        <button data-cmd="justifyCenter">⤒</button>
-        <button data-cmd="justifyRight">⟶</button>
-        <button data-cmd="justifyFull">☰</button>
-        <select id="fontSelect">
-          <option value="inherit">System</option>
-          <option value="Arial, Helvetica, sans-serif" selected>Arial</option>
-          <option value="Verdana, sans-serif">Verdana</option>
-          <option value="'Times New Roman', Times, serif">Times New Roman</option>
-          <option value="Georgia, serif">Georgia</option>
-          <option value="'Courier New', monospace">Courier New</option>
-          <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
-          <option value="'Lucida Sans', sans-serif">Lucida Sans</option>
-          <option value="'Tahoma', sans-serif">Tahoma</option>
-          <option value="'Palatino Linotype', serif">Palatino Linotype</option>
-          <option value="'Garamond', serif">Garamond</option>
-          <option value="'Bookman Old Style', serif">Bookman Old Style</option>
-          <option value="'Comic Sans MS', cursive, sans-serif">Comic Sans MS</option>
-          <option value="'Impact', sans-serif">Impact</option>
-          <option value="'Calibri', sans-serif">Calibri</option>
-          <option value="'Cambria', serif">Cambria</option>
-          <option value="'Candara', sans-serif">Candara</option>
-          <option value="'Consolas', monospace">Consolas</option>
-          <option value="'Constantia', serif">Constantia</option>
-          <option value="'Corbel', sans-serif">Corbel</option>
-          <option value="'Franklin Gothic Medium', sans-serif">Franklin Gothic</option>
-          <option value="'Futura', sans-serif">Futura</option>
-          <option value="'Gill Sans', sans-serif">Gill Sans</option>
-          <option value="'Helvetica Neue', sans-serif">Helvetica Neue</option>
-          <option value="'Optima', sans-serif">Optima</option>
-          <option value="'Rockwell', serif">Rockwell</option>
-          <option value="'Didot', serif">Didot</option>
-          <option value="'Univers', sans-serif">Univers</option>
-          <option value="'Myriad Pro', sans-serif">Myriad Pro</option>
-          <option value="'Baskerville', serif">Baskerville</option>
-          <option value="'Century Gothic', sans-serif">Century Gothic</option>
-          <option value="'Gill Sans MT', sans-serif">Gill Sans MT</option>
-          <option value="'Book Antiqua', serif">Book Antiqua</option>
-          <option value="'Arial Black', sans-serif">Arial Black</option>
-          <option value="'Segoe UI', sans-serif">Segoe UI</option>
-          <option value="'Helvetica', sans-serif">Helvetica</option>
-        </select>
-        <input type="number" id="fontSize" min="8" max="72" value="18"/>
-        <input type="color" id="colorPicker" value="#333"/>
-        <button id="clearBtn">Clear</button>
-        <input type="file" id="imgUpload" accept="image/*" style="display:none"/>
-        <button id="imgBtn">📷 Insert Image</button>
-      </div>
+<div class="workspace">
+<section class="left">
+<div class="toolbar">
+<button data-cmd="bold"><b>B</b></button>
+<button data-cmd="italic"><i>I</i></button>
+<button data-cmd="underline"><u>U</u></button>
+<button data-cmd="justifyLeft">⟵</button>
+<button data-cmd="justifyCenter">⤒</button>
+<button data-cmd="justifyRight">⟶</button>
+<button data-cmd="justifyFull">☰</button>
+<select id="fontSelect"><option value="inherit" selected>System</option><option value="Arial, Helvetica, sans-serif">Arial</option><option value="Verdana, sans-serif">Verdana</option><option value="'Times New Roman', Times, serif">Times New Roman</option><option value="Georgia, serif">Georgia</option><option value="'Courier New', monospace">Courier New</option><option value="'Trebuchet MS', sans-serif">Trebuchet MS</option></select>
+<input type="number" id="fontSize" min="8" max="72" value="18">
+<input type="color" id="colorPicker" value="#333">
+<input type="file" id="imageInput" accept="image/*">
+<button id="clearBtn">Clear</button>
+<select id="languageSelect">
+<optgroup label="Indian Languages">
+<option>Hindi</option><option>Bengali</option><option>Telugu</option><option>Marathi</option><option>Tamil</option>
+<option>Urdu</option><option>Gujarati</option><option>Kannada</option><option>Odia</option><option>Malayalam</option>
+<option>Punjabi</option><option>Assamese</option><option>Maithili</option><option>Santali</option><option>Kashmiri</option>
+<option>Nepali</option><option>Konkani</option><option>Sindhi</option><option>Dogri</option><option>Manipuri</option>
+<option>Bodo</option><option>Sanskrit</option>
+</optgroup>
+<optgroup label="World Languages">
+<option>English</option><option>Spanish</option><option>Mandarin</option><option>French</option><option>German</option>
+<option>Russian</option><option>Japanese</option><option>Portuguese</option><option>Italian</option><option>Arabic</option>
+<option>Turkish</option><option>Korean</option><option>Dutch</option><option>Swedish</option><option>Greek</option>
+<option>Thai</option><option>Polish</option><option>Vietnamese</option><option>Hebrew</option><option>Hungarian</option>
+<option>Czech</option><option>Filipino</option><option>Malay</option>
+</optgroup>
+</select>
+</div>
 
-      <div class="canvas-wrap">
-        <div class="page">
-          <div id="editor" class="editor" contenteditable="true" spellcheck="true">
-            <h1 style="margin-top:0;">Your title here</h1>
-            <p>Start typing... default alignment is center. Insert images by clicking Insert Image or dragging one into this area.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+<div class="canvas-wrap" id="canvasWrap">
+<div class="page"><div class="editor" contenteditable="true" spellcheck="true"><h1>Your title here</h1><p>Start typing...</p></div></div>
+</div>
 
-    <aside class="right">
-      <div class="panel">
-        <h4>Page Settings</h4>
-        <label for="pageSize">Size</label>
-        <select id="pageSize"><option value="A4" selected>A4</option><option value="Letter">Letter</option></select>
-        <label for="orientation">Orientation</label>
-        <select id="orientation"><option value="portrait" selected>Portrait</option><option value="landscape">Landscape</option></select>
-        <label for="margins">Margins (px)</label>
-        <input id="margins" type="number" min="0" max="120" value="28"/>
-      </div>
+<button id="addPageBtn">+ Add Page</button>
+</section>
 
-      <div class="panel">
-        <h4>Document Info</h4>
-        <input id="docTitle" type="text" placeholder="Document title" value="PDFab"/>
-        <input id="docAuthor" type="text" placeholder="Author" value="PDFab"/>
-        <button id="downloadBtn">Export PDF</button>
-      </div>
-    </aside>
-  </div>
+<aside class="right">
+<div class="panel">
+<h4>Page Settings</h4>
+<label for="pageSize">Size</label>
+<select id="pageSize"><option value="A4" selected>A4</option><option value="Letter">Letter</option></select>
+<label for="orientation">Orientation</label>
+<select id="orientation"><option value="portrait" selected>Portrait</option><option value="landscape">Landscape</option></select>
+<label for="margins">Margins (px)</label>
+<input id="margins" type="number" min="0" max="120" value="28">
+</div>
+<div class="panel">
+<h4>Document Info</h4>
+<input id="docTitle" type="text" placeholder="Document title" value="PDFab">
+<input id="docAuthor" type="text" placeholder="Author" value="PDFab">
+<button id="downloadBtn">Export PDF</button>
+</div>
+</aside>
+</div>
 </div>
 
 <iframe id="print-frame" style="display:none;width:100%;height:100%;"></iframe>
 
 <script>
-const editor=document.getElementById('editor');
+// Editor commands
+const editor=document.querySelector('.editor');
 document.execCommand('justifyCenter',false,null);
 
-document.querySelectorAll('.toolbar button[data-cmd]').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.execCommand('styleWithCSS',false,true);
-    document.execCommand(btn.dataset.cmd,false,null);
-    editor.focus();
-  });
-});
-
-function applyStyle(prop,value){
-  const sel=window.getSelection();
-  if(!sel.rangeCount){editor.style[prop]=value; return;}
-  const range=sel.getRangeAt(0);
-  if(range.collapsed){editor.style[prop]=value; return;}
-  const content=range.extractContents();
-  const span=document.createElement('span');
-  span.style[prop]=value; span.style.display='inline';
-  span.appendChild(content);
-  range.insertNode(span);
-  sel.removeAllRanges();
-  const r=document.createRange();
-  r.setStartAfter(span); r.collapse(true);
-  sel.addRange(r);
-}
-
+document.querySelectorAll('.toolbar button[data-cmd]').forEach(btn=>{btn.addEventListener('click',()=>{document.execCommand('styleWithCSS',false,true); document.execCommand(btn.dataset.cmd,false,null); editor.focus();});});
+function applyStyle(prop,value){const sel=window.getSelection(); if(!sel.rangeCount){editor.style[prop]=value; return;} const range=sel.getRangeAt(0); if(range.collapsed){editor.style[prop]=value; return;} const content=range.extractContents(); const span=document.createElement('span'); span.style[prop]=value; span.style.display='inline'; span.appendChild(content); range.insertNode(span); sel.removeAllRanges(); const r=document.createRange(); r.setStartAfter(span); r.collapse(true); sel.addRange(r);}
 document.getElementById('fontSelect').addEventListener('change',()=>{applyStyle('fontFamily',document.getElementById('fontSelect').value); editor.focus();});
 document.getElementById('fontSize').addEventListener('input',()=>{applyStyle('fontSize',document.getElementById('fontSize').value+'px'); editor.focus();});
 document.getElementById('colorPicker').addEventListener('input',()=>{applyStyle('color',document.getElementById('colorPicker').value); editor.focus();});
+document.getElementById('clearBtn').addEventListener('click',()=>{editor.innerHTML='<div style="text-align:center;">'+editor.innerText.replace(/\n/g,'<br>')+'</div>';});
 
-document.getElementById('clearBtn').addEventListener('click',()=>{
-  editor.innerHTML='<div style="text-align:center;">'+editor.innerText.replace(/\n/g,'<br>')+'</div>';
-});
+// Dark mode
+document.getElementById('themeToggle').addEventListener('click',()=>{document.body.classList.toggle('dark-mode');});
 
-document.getElementById('imgBtn').addEventListener('click',()=>document.getElementById('imgUpload').click());
-document.getElementById('imgUpload').addEventListener('change',e=>{
-  const file=e.target.files[0];
-  if(file && file.type.startsWith('image/')){
-    const reader=new FileReader();
-    reader.onload=()=>{const img=document.createElement('img'); img.src=reader.result; img.className='inserted-image'; img.style.width='80%'; insertImage(img);};
-    reader.readAsDataURL(file);
-  }
-  e.target.value='';
-});
+// Image insertion
+const imageInput=document.getElementById('imageInput');
+imageInput.addEventListener('change',e=>{Array.from(e.target.files).forEach(file=>{const reader=new FileReader();reader.onload=function(ev){const img=document.createElement('img');img.src=ev.target.result; editor.appendChild(img);};reader.readAsDataURL(file);});});
 
-function insertImage(img){
-  const sel=window.getSelection();
-  if(!sel.rangeCount){editor.appendChild(img); return;}
-  const range=sel.getRangeAt(0); range.deleteContents(); range.insertNode(img); range.setStartAfter(img); range.collapse(true);
-  sel.removeAllRanges(); sel.addRange(range); editor.focus();
-}
+editor.addEventListener('dragover',e=>{e.preventDefault(); e.dataTransfer.dropEffect='copy';});
+editor.addEventListener('drop',e=>{e.preventDefault(); Array.from(e.dataTransfer.files).forEach(file=>{if(file.type.startsWith('image/')){const reader=new FileReader();reader.onload=function(ev){const img=document.createElement('img');img.src=ev.target.result; editor.appendChild(img);};reader.readAsDataURL(file);}});});
 
+// Multi-page
+const canvasWrap=document.getElementById('canvasWrap');
+document.getElementById('addPageBtn').addEventListener('click',()=>{const newPage=document.createElement('div'); newPage.className='page'; const newEditor=document.createElement('div'); newEditor.className='editor'; newEditor.contentEditable=true; newEditor.innerHTML='<p>New page...</p>'; newPage.appendChild(newEditor); canvasWrap.appendChild(newPage);});
+
+// PDF export
 document.getElementById('downloadBtn').addEventListener('click',()=>{
-  const htmlContent=`<html><head><title>${document.getElementById('docTitle').value}</title><style>
-  @page{size:${document.getElementById('pageSize').value} ${document.getElementById('orientation').value}; margin:${document.getElementById('margins').value}px;}
-  body{font-family:Arial,sans-serif;font-size:18px;color:#111;padding:${document.getElementById('margins').value}px;margin:0;background:white; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
-  img{max-width:100%;height:auto;page-break-inside:avoid;display:block;margin:12px auto;}
-  </style></head><body>${editor.innerHTML}</body></html>`;
-  const iframe=document.getElementById('print-frame'); iframe.srcdoc=htmlContent; iframe.onload=()=>{iframe.contentWindow.focus(); iframe.contentWindow.print();};
-});
-
-document.getElementById('themeToggle').addEventListener('click',()=>{
-  document.body.classList.toggle('dark-mode');
+  const pages=document.querySelectorAll('.page .editor');
+  let htmlContent='';
+  pages.forEach(pg=>{htmlContent+=`<div style="page-break-after:always;">${pg.innerHTML}</div>`;});
+  const html=`<html><head><title>${document.getElementById('docTitle').value}</title><style>@page{size:${document.getElementById('pageSize').value} ${document.getElementById('orientation').value}; margin:${document.getElementById('margins').value}px;} body{font-family:Arial,sans-serif;font-size:18px;color:#111;padding:${document.getElementById('margins').value}px;margin:0; -webkit-print-color-adjust:exact; print-color-adjust:exact;} img{max-width:100%;height:auto;page-break-inside:avoid;display:block;margin:12px auto;}</style></head><body>${htmlContent}</body></html>`;
+  const iframe=document.getElementById('print-frame'); iframe.srcdoc=html; iframe.onload=()=>{iframe.contentWindow.focus(); iframe.contentWindow.print();};
 });
 </script>
 </body>
